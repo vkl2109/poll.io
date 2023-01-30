@@ -2,9 +2,9 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    username = models.charField(max_length=64)
-    password = models.charField(max_length=64)
-    avatarBase64 = models.charField()
+    username = models.CharField(max_length=64)
+    password = models.CharField(max_length=64)
+    avatarBase64 = models.TextField()
 
     def __str__(self):
         return f"{self.id} - {self.username}"
