@@ -9,8 +9,8 @@ export default function Login ({ navigation }) {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ hide, setHide ] = useState(true)
-    const [errorMsg, setErrorMsg] = useState('')
-    const [errorDialog, setErrorDialog] = useState(false)
+    const [ errorMsg, setErrorMsg ] = useState('')
+    const [ errorDialog, setErrorDialog ] = useState(false)
 
     const handleLogin = () => {
         const login = async () => {

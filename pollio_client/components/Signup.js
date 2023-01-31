@@ -71,7 +71,7 @@ export default function Signup ({ navigation }) {
             setErrorDialog(true)
             setErrorMsg(`passwords don't match`)
         }
-        // navigation.navigate('Main') // temporary
+        navigation.navigate('Main') // temporary
     }
 
     const toggleErrorDialog = () => {

@@ -16,7 +16,7 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
             <Stack.Screen name='Login' component={Login} />
             <Stack.Screen name='Signup' component={Signup} />
             <Stack.Screen name='Main' component={Main} />
