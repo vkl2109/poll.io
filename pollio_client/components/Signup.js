@@ -82,10 +82,6 @@ export default function Signup ({ navigation }) {
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
                 <KeyboardAwareScrollView>
                 <View style={styles.container}>
-                    <View style={styles.imageContainer}>
-                        <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>
-                    </View>
-                    <View style={styles.loginContainer}>
                         <Dialog
                             isVisible={errorDialog}
                             onBackdropPress={toggleErrorDialog}
@@ -118,9 +114,40 @@ export default function Signup ({ navigation }) {
                             secureTextEntry={hide2}
                             right={<TextInput.Icon icon="eye" onPress={() => setHide2(hide2 => !hide2)} style={{ justifyContent: 'center'}}/>}
                             />
+                        {avatar ? 
                         <View style={styles.avatarContainer}>
-                            
+                            {/* <View ref={imageRef} collapsable={false}>
+                                <Image source={{ uri: avatar }} style={styles.image} />
+                            </View> */}
                         </View>
+                        :
+                        <View style={styles.avatarContainer}>
+                            <Button
+                            title={"+"}
+                            buttonStyle={{
+                                backgroundColor: '#FFA500',
+                                borderColor: 'transparent',
+                                borderWidth: 0,
+                                borderRadius: 30,
+                                paddingTop: 6
+                            }}
+                            containerStyle={{
+                                width: 40,
+                                height: 40,
+                                marginHorizontal: 50,
+                                marginVertical: 10,
+                            }}
+                            titleStyle={{ fontWeight: 'bold' }}
+                            onPress={() => takePicture()}
+                            />
+                            <View style={styles.cameraContainer}>
+                                <Camera
+                                    ref={ref => setCamera(ref)}
+                                    style={styles.fixedRatio}
+                                    type={Camera.Constants.Type.front}
+                                    ratio={'1:1'} />
+                            </View>
+                        </View>}
                         <Button
                             title={"SIGN UP"}
                             buttonStyle={{
@@ -154,7 +181,6 @@ export default function Signup ({ navigation }) {
                             titleStyle={{ fontWeight: 'bold' }}
                             onPress={() => navigation.navigate('Login')}
                             />
-                    </View>
                 </View>
                 </KeyboardAwareScrollView>
             </ScrollView>
@@ -163,50 +189,61 @@ export default function Signup ({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexGrow: 1,
-    backgroundColor: '#ADD8E6', // '#25292e'
-    alignItems: 'center',
-    justifyContent: 'center',
-    // alignSelf:'stretch'
-  },
-  logo: {
-    width: 300,
-    height: 120,
-    marginTop: 60
-  },
-  avatarContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 18,
-  },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1 / 4,
-  },
-  loginContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 3 / 4,
-  },
-  textInput: {
-    height: 40,
-    width: 250,
-    margin: 12,
-    borderWidth: 0,
-    padding: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    elevation: 20,
-    shadowColor: '#52006A',
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  }
+    container: {
+        flex: 1,
+        flexGrow: 1,
+        backgroundColor: '#ADD8E6', // '#25292e'
+        alignItems: 'center',
+        justifyContent: 'center',
+        // alignSelf:'stretch'
+    },
+    cameraContainer: {
+        height: 200,
+        width: 200,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    fixedRatio: {
+        flex: 1,
+        aspectRatio: 1
+    },
+    logo: {
+        width: 300,
+        height: 120,
+        marginTop: 60
+    },
+    avatarContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    image: {
+        width: 200,
+        height: 200,
+        borderRadius: 18,
+    },
+    imageContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1 / 4,
+    },
+    loginContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 3 / 4,
+    },
+    textInput: {
+        height: 40,
+        width: 250,
+        margin: 12,
+        borderWidth: 0,
+        padding: 10,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        elevation: 20,
+        shadowColor: '#52006A',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    }
 })
