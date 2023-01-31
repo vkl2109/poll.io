@@ -1,8 +1,46 @@
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TextInput } from 'react-native-paper';
+import { Button, Dialog } from '@rneui/themed';
+import * as SecureStore from 'expo-secure-store';
 
 export default function Login ({ navigation }) {
+    const [ username, setUsername ] = useState('')
+    const [ password, setPassword ] = useState('')
+    const [ hide, setHide ] = useState(true)
+    const [errorMsg, setErrorMsg] = useState('')
+    const [errorDialog, setErrorDialog] = useState(false)
+
+    const handleLogin = () => {
+        const login = async () => {
+            let req = await fetch("http://10.129.2.90:5000/login", {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                })
+            })
+            let res = await req.json()
+            if (req.ok) {
+                setErrorMsg('')
+                await SecureStore.setItemAsync('token', res.token);
+                navigation.navigate('Main')
+            }
+            else {
+                setErrorMsg(res.error)
+            }
+        }
+        // login()
+        navigation.navigate('Main') // temporary
+    }
+
+    const toggleErrorDialog = () => {
+        setErrorDialog(false)
+        setErrorMsg('')
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
@@ -11,7 +49,62 @@ export default function Login ({ navigation }) {
                         <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>
                     </View>
                     <View style={styles.loginContainer}>
-                        <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>
+                        <Dialog
+                            isVisible={errorDialog}
+                            onBackdropPress={toggleErrorDialog}
+                            >
+                            <Dialog.Title style={styles.dialogTitle} title={"Log In Error"} />
+                            <Text style={styles.dialogText}>{errorMsg}</Text>
+                        </Dialog>
+                        <TextInput
+                            mode="outlined"
+                            label="username"
+                            value={username}
+                            onChangeText={username => setUsername(username)}
+                            style={styles.textInput}
+                            />
+                        <TextInput
+                            mode="outlined"
+                            label="password"
+                            value={password}
+                            onChangeText={password => setPassword(password)}
+                            style={styles.textInput}
+                            secureTextEntry={hide}
+                            right={<TextInput.Icon icon="eye" onPress={() => setHide(hide => !hide)} style={{ justifyContent: 'center'}}/>}
+                            />
+                        <Button
+                            title={"LOG IN"}
+                            buttonStyle={{
+                                backgroundColor: '#369F8E',
+                                borderWidth: 0,
+                                borderColor: 'white',
+                                borderRadius: 30,
+                            }}
+                            containerStyle={{
+                                width: 200,
+                                marginHorizontal: 50,
+                                marginVertical: 10,
+                            }}
+                            titleStyle={{ fontWeight: 'bold' }}
+                            onPress={() => handleLogin()}
+                            />
+                        <Button
+                            title={"sign up"}
+                            buttonStyle={{
+                                backgroundColor: '#FFA500',
+                                borderColor: 'transparent',
+                                borderWidth: 0,
+                                borderRadius: 30,
+                            }}
+                            containerStyle={{
+                                width: 150,
+                                height: 50,
+                                marginHorizontal: 50,
+                                marginVertical: 10,
+                            }}
+                            titleStyle={{ fontWeight: 'bold' }}
+                            onPress={() => navigation.navigate('Signup')}
+                            />
                     </View>
                     <View style={styles.imageContainer}>
                         <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>
@@ -26,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexGrow: 1,
-    backgroundColor: '#25292e', // '#25292e'
+    backgroundColor: '#ADD8E6', // '#25292e'
     alignItems: 'center',
     justifyContent: 'center',
     // alignSelf:'stretch'
@@ -42,29 +135,18 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1 / 4,
   },
   loginContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1 / 2,
   },
-  dialogTitle: {
-    textAlign: 'center'
-  },
-  dialogText: {
-    textAlign: 'center',
-    color: '#FF0000'
-  },
-  headerContainer: {
-    marginTop: 40,
-    flex: 2 / 3,
-    alignItems: 'center',
-    flexDirection: 'column',
-    padding: 0
-    // backgroundColor: '#FFFFFF',
-  },
-  input: {
-    height: 50,
-    width: 200,
+  textInput: {
+    height: 40,
+    width: 250,
     margin: 12,
     borderWidth: 0,
     padding: 10,
