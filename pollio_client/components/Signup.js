@@ -129,6 +129,11 @@ export default function Signup ({ navigation }) {
         setLibrary(false)
     }
 
+    const toggleClose = () => {
+        setChooseAvatar(false)
+        setAvatar()
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
@@ -291,7 +296,7 @@ export default function Signup ({ navigation }) {
                                 marginHorizontal: 50,
                                 marginVertical: 10,
                             }}
-                            onPress={() => setChooseAvatar(false)}
+                            onPress={() => toggleClose()}
                             icon={<Icon name="arrow-circle-up" size={20} color="white" />}
                             />
                         : <View style={styles.buttonContainer}> 
