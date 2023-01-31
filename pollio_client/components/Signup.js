@@ -5,6 +5,7 @@ import { TextInput } from 'react-native-paper';
 import { Button, Dialog } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as SecureStore from 'expo-secure-store';
+import * as FileSystem from 'expo-file-system';
 import { Camera } from 'expo-camera';
 
 export default function Signup ({ navigation }) {
@@ -19,6 +20,7 @@ export default function Signup ({ navigation }) {
     const [ camera, setCamera ] = useState(null);
     const [ base64Image, setBase64Image ] = useState(null)
     const [ avatar, setAvatar ] = useState()
+    const imageRef = useRef();
 
     useEffect(() => {
         (async () => {
@@ -116,9 +118,27 @@ export default function Signup ({ navigation }) {
                             />
                         {avatar ? 
                         <View style={styles.avatarContainer}>
-                            {/* <View ref={imageRef} collapsable={false}>
+                            <Button
+                                title={"retake"}
+                                buttonStyle={{
+                                    backgroundColor: '#FFA500',
+                                    borderColor: 'transparent',
+                                    borderWidth: 0,
+                                    borderRadius: 30,
+                                    paddingTop: 6
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    height: 40,
+                                    marginHorizontal: 50,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => setAvatar()}
+                                />
+                            <View ref={imageRef} collapsable={false}>
                                 <Image source={{ uri: avatar }} style={styles.image} />
-                            </View> */}
+                            </View>
                         </View>
                         :
                         <View style={styles.avatarContainer}>
@@ -218,9 +238,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-        width: 200,
         height: 200,
-        borderRadius: 18,
+        width: 200,
+        alignSelf: 'center'
     },
     imageContainer: {
         alignItems: 'center',
