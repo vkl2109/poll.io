@@ -5,6 +5,8 @@ import { TextInput } from 'react-native-paper';
 import { Button, Dialog } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as SecureStore from 'expo-secure-store';
+import { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { Camera } from 'expo-camera';
 
@@ -20,7 +22,12 @@ export default function Signup ({ navigation }) {
     const [ camera, setCamera ] = useState(null);
     const [ base64Image, setBase64Image ] = useState(null)
     const [ avatar, setAvatar ] = useState()
+    const [status, requestPermission] = MediaLibrary.usePermissions();
     const imageRef = useRef();
+
+    if (status === null) {
+        requestPermission();
+    }
 
     useEffect(() => {
         (async () => {
@@ -79,6 +86,22 @@ export default function Signup ({ navigation }) {
         }
     }
 
+    const onSaveImageAsync = async () => {
+        try {
+            const localUri = await captureRef(imageRef, {
+                height: 440,
+                quality: 1
+            });
+
+            await MediaLibrary.saveToLibraryAsync(localUri);
+            if (localUri) {
+                alert("Saved!");
+            }
+        } catch (e) {
+            alert(e);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
@@ -118,24 +141,44 @@ export default function Signup ({ navigation }) {
                             />
                         {avatar ? 
                         <View style={styles.avatarContainer}>
-                            <Button
-                                title={"retake"}
-                                buttonStyle={{
-                                    backgroundColor: '#FFA500',
-                                    borderColor: 'transparent',
-                                    borderWidth: 0,
-                                    borderRadius: 30,
-                                    paddingTop: 6
-                                }}
-                                containerStyle={{
-                                    width: 100,
-                                    height: 40,
-                                    marginHorizontal: 50,
-                                    marginVertical: 10,
-                                }}
-                                titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => setAvatar()}
-                                />
+                            <View style={styles.buttonContainer}> 
+                                <Button
+                                    title={"retake"}
+                                    buttonStyle={{
+                                        backgroundColor: '#FFA500',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                        paddingTop: 6
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        height: 40,
+                                        marginHorizontal: 10,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => setAvatar()}
+                                    />
+                                <Button
+                                    title={"save"}
+                                    buttonStyle={{
+                                        backgroundColor: '#FFA500',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                        paddingTop: 6
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        height: 40,
+                                        marginHorizontal: 10,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => onSaveImageAsync()}
+                                    />
+                            </View>
                             <View ref={imageRef} collapsable={false}>
                                 <Image source={{ uri: avatar }} style={styles.image} />
                             </View>
@@ -251,6 +294,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 3 / 4,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     textInput: {
         height: 40,
