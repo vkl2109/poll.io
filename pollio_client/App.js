@@ -4,6 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Main from './components/Main';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
