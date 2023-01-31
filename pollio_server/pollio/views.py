@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import User
 
@@ -8,6 +9,7 @@ from .models import User
 def index(request):
     return HttpResponse("Pollio")
 
+@csrf_exempt
 def user_show(request, id):
     try:
         user = User.objects.get(id=id)
