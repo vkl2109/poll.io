@@ -29,6 +29,7 @@ export default function Login ({ navigation }) {
                 navigation.navigate('Main')
             }
             else {
+                setErrorDialog(true)
                 setErrorMsg(res.error)
             }
         }
