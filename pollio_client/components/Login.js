@@ -44,7 +44,7 @@ export default function Login ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <View style={styles.container}>
                     <View style={styles.imageContainer}>
                         <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>

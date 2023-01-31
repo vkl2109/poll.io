@@ -136,8 +136,8 @@ export default function Signup ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
-                <KeyboardAwareScrollView>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 <View style={styles.container}>
                         <Dialog
                             isVisible={errorDialog}
