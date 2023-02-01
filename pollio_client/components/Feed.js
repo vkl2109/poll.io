@@ -1,5 +1,82 @@
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Poll from './Poll'
+
+const examplePolls = [{
+    "user" : {
+        "avatarBase64" : "",
+        "username": "Larson"
+    },
+    "poll" : {
+        "question" : "What do I eat today?",
+        "option1" : "pizza",
+        "option2" : "ramen"
+    },
+    "responses" : [
+        {
+            "username" : "serrin",
+            "response" : "pizza"
+        },
+        {
+            "username" : "cooper",
+            "response" : "ramen"
+        },
+        {
+            "username" : "michael",
+            "response" : "pizza"
+        },
+    ]
+},
+{
+    "user" : {
+        "avatarBase64" : "",
+        "username": "serrin"
+    },
+    "poll" : {
+        "question" : "Who is kewler?",
+        "option1" : "king k rool",
+        "option2" : "piranha plant"
+    },
+    "responses" : [
+        {
+            "username" : "larson",
+            "response" : "king k rool"
+        },
+        {
+            "username" : "cooper",
+            "response" : "piranha plant"
+        },
+        {
+            "username" : "michael",
+            "response" : "king k rool"
+        },
+    ]
+},
+{
+    "user" : {
+        "avatarBase64" : "",
+        "username": "michael"
+    },
+    "poll" : {
+        "question" : "_ in 5 minutes.",
+        "option1" : "Turing",
+        "option2" : "Collins"
+    },
+    "responses" : [
+        {
+            "username" : "serrin",
+            "response" : "Collins"
+        },
+        {
+            "username" : "cooper",
+            "response" : "Turing"
+        },
+        {
+            "username" : "larson",
+            "response" : "Collins"
+        },
+    ]
+}]
 
 export default function Feed () {
     return (
