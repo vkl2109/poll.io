@@ -32,6 +32,7 @@ def login():
         given_password = data['password']
         if user.password == given_password:
             access_token = create_access_token(identity=user.id)
+            # print(access_token)
             return jsonify({'user': user.toJSON(), 'token': access_token}), 200
         else:
             return jsonify({'error': 'Invalid Password'}), 422
@@ -51,10 +52,10 @@ def auto_login():
         return jsonify(user.toJSON()), 200
 
 
-@app.post('/users')
+@app.post('/signup')
 def create_user():
     data = request.json
-    user = User(data['username'], data['password'])
+    user = User(data['username'], data['password'], data['avatarBase64'])
     db.session.add(user)
     db.session.commit()
     return jsonify(user.toJSON()), 201

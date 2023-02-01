@@ -44,7 +44,7 @@ export default function Signup ({ navigation }) {
 
     const handleSignUp = () => {
         const signup = async () => {
-            let req = await fetch("http://10.129.2.90:5000/signup", {
+            let req = await fetch("http://10.129.2.90:8000/signup", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -56,7 +56,6 @@ export default function Signup ({ navigation }) {
             let res = await req.json()
             if (req.ok) {
                 setErrorMsg('')
-                await SecureStore.setItemAsync('token', res.token);
                 navigation.navigate('Main')
             }
             else {
@@ -65,13 +64,13 @@ export default function Signup ({ navigation }) {
             }
         }
         if (password == confirmPassword) {
-            // signup()
+            signup()
         }
         else {
             setErrorDialog(true)
             setErrorMsg(`passwords don't match`)
         }
-        navigation.navigate('Main') // temporary
+        // navigation.navigate('Main') // temporary
     }
 
     const toggleErrorDialog = () => {

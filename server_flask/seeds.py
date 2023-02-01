@@ -9,11 +9,11 @@ def run_seeds():
         db.create_all()
         print('Seeding database ... 🌱')
 
-        user1 = User('a', 'a')
+        user1 = User('a', 'a', '')
         db.session.add(user1)
         db.session.commit()
 
-        user2 = User('b', 'b')
+        user2 = User('b', 'b', '')
         db.session.add(user2)
         db.session.commit()
 

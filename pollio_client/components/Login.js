@@ -25,7 +25,7 @@ export default function Login ({ navigation }) {
             let res = await req.json()
             if (req.ok) {
                 setErrorMsg('')
-                // await SecureStore.setItemAsync('token', res.token);
+                await SecureStore.setItemAsync('token', res.token);
                 navigation.navigate('Main')
             }
             else {
@@ -33,8 +33,8 @@ export default function Login ({ navigation }) {
                 setErrorMsg(res.error)
             }
         }
-        // login()
-        navigation.navigate('Main') // temporary
+        login()
+        // navigation.navigate('Main') // temporary
     }
 
     const toggleErrorDialog = () => {
