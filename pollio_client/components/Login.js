@@ -14,7 +14,7 @@ export default function Login ({ navigation }) {
 
     const handleLogin = () => {
         const login = async () => {
-            let req = await fetch("http://10.129.2.90:5000/login", {
+            let req = await fetch("http://10.129.2.90:8000/login", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -25,7 +25,7 @@ export default function Login ({ navigation }) {
             let res = await req.json()
             if (req.ok) {
                 setErrorMsg('')
-                await SecureStore.setItemAsync('token', res.token);
+                // await SecureStore.setItemAsync('token', res.token);
                 navigation.navigate('Main')
             }
             else {
