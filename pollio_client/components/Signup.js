@@ -131,6 +131,7 @@ export default function Signup ({ navigation }) {
 
     const toggleClose = () => {
         setChooseAvatar(false)
+        setBase64Image('')
         setAvatar()
     }
 
