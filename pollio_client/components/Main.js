@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
 import PollTab from './PollTab'
-import CreatePoll from './CreatePoll'
+import Friends from './Friends'
 import Profile from './Profile'
 import { Icon } from '@rneui/themed';
 
@@ -27,11 +27,11 @@ export default function Main () {
                     ),
                 }}
             />
-            <Tab.Screen name="CreateNewPoll" component={CreatePoll}
+            <Tab.Screen name="Friends" component={Friends}
                 options={{
-                    tabBarLabel: 'Create',
+                    tabBarLabel: 'Friends',
                     tabBarIcon: ({ color, size }) => (
-                        <Icon name="add-circle-outline" color={color} size={size} />
+                        <Icon name="people" color={color} size={size} />
                     ),
                 }}
             />
