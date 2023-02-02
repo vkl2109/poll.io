@@ -68,6 +68,15 @@ def all_polls():
     else:
         return {}, 404
 
+
+@app.post('/yourpolls')
+@jwt_required()
+def your_polls():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    polls = Poll.query.filter_by(user_id=user.id)
+    return jsonify([poll.to_dict() for poll in polls]), 200
+
 @socketio.on('connect')
 @jwt_required()
 def connected():
