@@ -65,8 +65,10 @@ class Response(db.Model):
     def toJSON(self):
         return {"id": self.id, "response": self.response, "user_id": self.user_id, "poll_id": self.poll_id}
 
-    def __init__(self, response):
+    def __init__(self, response, user_id, poll_id):
         self.response = response
+        self.user_id = user_id
+        self.poll_id = poll_id
 
     def __repr__(self):
         return '<Response %r>' % self.response
