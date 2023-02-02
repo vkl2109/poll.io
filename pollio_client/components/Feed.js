@@ -84,8 +84,8 @@ const examplePolls = [{
 export default function Feed ({ navigation }) {
     const screenWidth = Dimensions.get('window').width; 
 
-    const handleViewPoll = () => {
-        navigation.navigate('ViewPoll')
+    const handleViewPoll = (pollData) => {
+        navigation.navigate('ViewPoll', { pollData: pollData })
     }
 
     return (
@@ -93,7 +93,7 @@ export default function Feed ({ navigation }) {
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
                 {examplePolls.map(examplePoll => {
                     return(
-                        <TouchableOpacity key={examplePoll.poll.id} onPress={()=>handleViewPoll()} style={styles.wrapper}>
+                        <TouchableOpacity key={examplePoll.poll.id} onPress={()=>handleViewPoll(examplePoll)} style={styles.wrapper}>
                             <Poll user={examplePoll.user} pollData={examplePoll.poll}/>
                         </TouchableOpacity>
                     )}   
