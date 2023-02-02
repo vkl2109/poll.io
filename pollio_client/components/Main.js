@@ -1,7 +1,6 @@
-import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
-import YourPolls from './YourPolls'
+import PollTab from './PollTab'
 import CreatePoll from './CreatePoll'
 import Profile from './Profile'
 import { Icon } from '@rneui/themed';
@@ -20,7 +19,7 @@ export default function Main () {
                     ),
                 }}
             />
-            <Tab.Screen name="YourPolls" component={YourPolls} 
+            <Tab.Screen name="YourPolls" component={PollTab} 
                 options={{
                     tabBarLabel: 'Polls',
                     tabBarIcon: ({ color, size }) => (
@@ -28,7 +27,7 @@ export default function Main () {
                     ),
                 }}
             />
-            <Tab.Screen name="CreatePoll" component={CreatePoll}
+            <Tab.Screen name="CreateNewPoll" component={CreatePoll}
                 options={{
                     tabBarLabel: 'Create',
                     tabBarIcon: ({ color, size }) => (
