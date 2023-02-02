@@ -68,10 +68,9 @@ export default function Poll ({ user, pollData }) {
                         borderColor: 'black',
                         borderWidth: 1,
                         borderRadius: 10,
+                        width: 'auto',
                     }}
                     containerStyle={{
-                        flex: 1,
-                        flexWrap: 'wrap',
                         marginHorizontal: 30,
                         marginVertical: 10,
                     }}
@@ -85,10 +84,9 @@ export default function Poll ({ user, pollData }) {
                         borderColor: 'black',
                         borderWidth: 1,
                         borderRadius: 10,
+                        width: 'auto',
                     }}
                     containerStyle={{
-                        flex: 1,
-                        flexWrap: 'wrap',
                         marginHorizontal: 30,
                         marginVertical: 10,
                     }}
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   pollCard: {
     width: '80%',

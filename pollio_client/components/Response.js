@@ -25,13 +25,14 @@ export default function Response ({ poll, response }) {
 
 const styles = StyleSheet.create({
     responseWrapper: {
-        width: screenWidth * 0.6,
+        width: 'auto',
         height: 50,
         borderColor: 'black',
         border: 1,
         borderRadius: 10,
         marginVertical: 10,
         marginHorizontal: 40,
+        paddingHorizontal: 20,
         alignItems: 'center',
         justifyContent: 'center'
     }
