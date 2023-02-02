@@ -8,7 +8,7 @@ export default function Home () {
     return(
         <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
             <Stack.Screen name='Feed' component={Feed} />
-            <Stack.Screen name='VIewPoll' component={ViewPoll} />
+            <Stack.Screen name='ViewPoll' component={ViewPoll} />
         </Stack.Navigator>
     )
 }
