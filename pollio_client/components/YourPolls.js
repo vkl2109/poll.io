@@ -2,23 +2,32 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
+import Response from './Response'
+import * as SecureStore from 'expo-secure-store';
 
 export default function YourPolls ({ navigation }) {
     const [ yourPolls, setYourPolls ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ visible, setVisible ] = useState(false)
 
     const screenWidth = Dimensions.get('window').width; 
 
     useEffect(()=>{
         const request = async () => {
-            let req = await fetch('http://10.129.2.90:8000/yourpolls')
+            let req = await fetch('http://10.129.2.90:8000/yourpolls', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+                }
+            })
             if (req.ok) {
                 let res = await req.json()
                 setYourPolls(res)
                 setIsLoading(false)
             }
         }
-        // request()
+        request()
     },[])
 
     return (
@@ -27,9 +36,16 @@ export default function YourPolls ({ navigation }) {
                 {isLoading ? <Text>Loading...</Text> :
                 (yourPolls.map(poll => {
                     return(
-                        <TouchableOpacity key={poll.poll.id} onPress={()=>handleViewPoll(poll)} style={styles.wrapper}>
+                    <View key={poll.poll.id} style={styles.wrapper}>
+                        <TouchableOpacity onPress={()=>setVisible(visible=>!visible)} style={styles.wrapper}>
                             <Poll user={poll.user} pollData={poll.poll}/>
                         </TouchableOpacity>
+                        {visible && (poll.responses.map((response, i)  => {
+                            return (
+                                <Response key={i} poll={poll.poll} response={response}/>
+                            )
+                        }))}
+                    </View>
                     )}   
                 ))}
             </ScrollView>

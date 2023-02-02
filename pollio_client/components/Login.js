@@ -33,8 +33,8 @@ export default function Login ({ navigation }) {
                 setErrorMsg(res.error)
             }
         }
-        // login()
-        navigation.navigate('Main') // temporary
+        login()
+        // navigation.navigate('Main') // temporary
     }
 
     const toggleErrorDialog = () => {

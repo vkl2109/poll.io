@@ -19,7 +19,7 @@ class User(db.Model):
     responses = db.relationship('Response', backref='user', lazy=True)
 
     def toJSON(self):
-        return {"id": self.id, "username": self.username, "password": self.password, "avatarBase64": self.avatarBase64, "polls": self.polls}
+        return {"id": self.id, "username": self.username, "password": self.password, "avatarBase64": self.avatarBase64}
 
     def __init__(self, username, password, avatarBase64=''):
         self.username = username
