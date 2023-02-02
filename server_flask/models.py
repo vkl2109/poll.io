@@ -44,6 +44,10 @@ class Poll(db.Model):
     def toJSON(self):
         return {"id": self.id, "question": self.question, "option1": self.option1, "option2": self.option2, "user_id": self.user_id}
 
+    def to_dict(self):
+        user = User.query.get(self.user_id)
+        return {"user": {"avatarBase64" : user.avatarBase64, "username": user.username}, "poll" : self.toJSON(), "responses" : [response.to_dict() for response in self.responses]}
+
     def __init__(self, question, option1, option2, user_id):
         self.question = question
         self.option1 = option1
@@ -64,6 +68,10 @@ class Response(db.Model):
 
     def toJSON(self):
         return {"id": self.id, "response": self.response, "user_id": self.user_id, "poll_id": self.poll_id}
+
+    def to_dict(self):
+        user = User.query.get(self.user_id)
+        return {"response": self.response, "username": user.username}
 
     def __init__(self, response, user_id, poll_id):
         self.response = response

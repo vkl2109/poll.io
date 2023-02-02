@@ -60,6 +60,14 @@ def create_user():
     db.session.commit()
     return jsonify(user.toJSON()), 201
 
+@app.get('/polls')
+def all_polls():
+    polls = Poll.query.all()
+    if len(polls):
+        return jsonify([poll.to_dict() for poll in polls]), 200
+    else:
+        return {}, 404
+
 @socketio.on('connect')
 @jwt_required()
 def connected():
