@@ -1,67 +1,102 @@
 import React, { useState, useEffect, useRef  } from 'react'
 import { StyleSheet, View, Text } from 'react-native';
-import { Button, Avatar, Card } from '@rneui/themed';
+import { Button, Avatar } from '@rneui/themed';
 
-export default function Poll ({ avatarBase64, username, question, option1, option2 }) {
+export default function Poll ({ user, pollData }) {
+    const [ option1Color, setOption1Color ] = useState('#FFA500')
+    const [ option2Color, setOption2Color ] = useState('#FFA500')
+
+    let avatarBase64 = user['avatarBase64']
+    let username = user['username']
+    let question = pollData['question']
+    let option1 = pollData['option1']
+    let option2 = pollData['option2']
+    
     let avatarImg = null
     if (avatarBase64 != '') {
         avatarImg = "data:image/jpeg;base64," + avatarBase64
     }
+
+    const handleSelect = (option) => {
+        if (option == 1) {
+            if (option1Color == '#228B22') {
+                setOption1Color('#FFA500')
+                setOption2Color('#FFA500')
+            }
+            else {
+                setOption1Color('#228B22')
+                setOption2Color('#FF0000')
+            }
+        }
+        else {
+            if (option2Color == '#228B22') {
+                setOption1Color('#FFA500')
+                setOption2Color('#FFA500')
+            }
+            else {
+                setOption1Color('#FF0000')
+                setOption2Color('#228B22')
+            }
+        }
+    }
     
     return (
-        <Card style={styles.pollCard}>
-            <View>
+        <View style={styles.pollCard}>
+            <View style={styles.header}>
+                {avatarImg ? 
                 <Avatar
-                    size={64}
+                    size={50}
                     rounded
                     source={avatarImg}
-                    />
-                <Text>{username} asks...</Text>
+                    containerStyle={{ margin: 10 }}
+                    /> 
+                :
+                <Avatar
+                    size={50}
+                    rounded
+                    title={username[0]}
+                    containerStyle={{ backgroundColor: '#3d4db7', margin: 10, textAlign: 'center' }}
+                    />}
+                <Text style={styles.username}>{username} asks...</Text>
             </View>
-            <Text>{question}</Text>
+            <Text style={styles.question}>{question}</Text>
             <View style={styles.buttonContainer}>
                 <Button
-                    title={option2}
+                    title={option1}
                     buttonStyle={{
-                        backgroundColor: '#FFA500',
-                        borderColor: 'transparent',
-                        borderWidth: 0,
-                        borderRadius: 30,
-                        paddingTop: 6,
-                        height: 40,
-                        width: 40
+                        backgroundColor: option1Color,
+                        borderColor: 'black',
+                        borderWidth: 1,
+                        borderRadius: 10,
                     }}
                     containerStyle={{
-                        width: 40,
-                        height: 40,
+                        flex: 1,
+                        flexWrap: 'wrap',
                         marginHorizontal: 30,
                         marginVertical: 10,
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
-                    onPress={() => handleSelect()}
+                    onPress={() => handleSelect(1)}
                     />
                 <Button
                     title={option2}
                     buttonStyle={{
-                        backgroundColor: '#FFA500',
-                        borderColor: 'transparent',
-                        borderWidth: 0,
-                        borderRadius: 30,
-                        paddingTop: 6,
-                        height: 40,
-                        width: 40
+                        backgroundColor: option2Color,
+                        borderColor: 'black',
+                        borderWidth: 1,
+                        borderRadius: 10,
                     }}
                     containerStyle={{
-                        width: 40,
-                        height: 40,
+                        flex: 1,
+                        flexWrap: 'wrap',
                         marginHorizontal: 30,
                         marginVertical: 10,
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
-                    onPress={() => handleSelect()}
+                    onPress={() => handleSelect(2)}
                     />
             </View>
-        </Card>
+        </View>
     )
 }
 
@@ -73,16 +108,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  header: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'left'
+  },
+  username: {
+    color: 'red'
+  },
+  question: {
+    alignSelf: 'center',
+    marginBottom: 10,
+    fontSize: 20
+  },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
   },
   pollCard: {
-    flex: 1,
-    flexGrow: 1,
+    width: '80%',
     border: 1,
     borderWidth: 1,
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    marginVertical: 20
   }
 });

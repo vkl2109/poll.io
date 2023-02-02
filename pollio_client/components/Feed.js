@@ -1,8 +1,9 @@
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
 
 const examplePolls = [{
+    "id": 0,
     "user" : {
         "avatarBase64" : "",
         "username": "Larson"
@@ -28,6 +29,7 @@ const examplePolls = [{
     ]
 },
 {
+    "id": 1,
     "user" : {
         "avatarBase64" : "",
         "username": "serrin"
@@ -53,6 +55,7 @@ const examplePolls = [{
     ]
 },
 {
+    "id": 2,
     "user" : {
         "avatarBase64" : "",
         "username": "michael"
@@ -78,13 +81,29 @@ const examplePolls = [{
     ]
 }]
 
+const exampleUser = {
+    "avatarBase64" : "",
+    "username" : "vincent"
+}
+
+const examplePollData = {
+    "question" : "What do I eat today?",
+    "option1" : "pizza",
+    "option2" : "pasta"
+}
+
 export default function Feed () {
+    const screenWidth = Dimensions.get('window').width; 
+
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
-                <View>
-                    <Text>Feed</Text>
-                </View>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
+                {examplePolls.map(examplePoll => {
+                    return(
+                        <Poll key={examplePoll.id} user={examplePoll.user} pollData={examplePoll.poll}/>
+                    )}   
+                )
+                }
             </ScrollView>
         </SafeAreaView>
     )
