@@ -11,6 +11,11 @@ export default function ViewPoll ({ navigation, route }) {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}>
                 <Poll user={pollData.user} pollData={pollData.poll}/>
+                {pollData.responses.map((response, i) => {
+                  return(
+                    <Response key={i} poll = {pollData.poll} response={response}/>
+                  )
+                })}
             </ScrollView>
         </SafeAreaView>
     )

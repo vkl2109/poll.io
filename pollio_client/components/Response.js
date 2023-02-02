@@ -1,9 +1,38 @@
-import { StyleSheet, View, Text } from 'react-native'
+import React, { useEffect } from 'react'
+import { StyleSheet, View, Text, Dimensions } from 'react-native'
 
-export default function Response () {
+const screenWidth = Dimensions.get('window').width; 
+
+
+export default function Response ({ poll, response }) {
+    let color = ''
+    let option = ''
+    if (response.response == poll.option1) {
+        option = 'flex-start'
+        color = '#90EE90'
+    }
+    else {
+        option = 'flex-end'
+        color = '#ffcccb'
+    }
+
     return(
-        <View>
-            <Text>Response</Text>
+        <View style={{ ...styles.responseWrapper, backgroundColor: color, alignSelf: option}}>
+            <Text>{response.username} voted {response.response}</Text>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    responseWrapper: {
+        width: screenWidth * 0.6,
+        height: 50,
+        borderColor: 'black',
+        border: 1,
+        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal: 40,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
