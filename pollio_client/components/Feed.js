@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { Animated, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
 
@@ -29,10 +29,10 @@ export default function Feed ({ navigation }) {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
                 {isLoading ? <Text>Loading...</Text> :
-                (allPolls.map(examplePoll => {
+                (allPolls.map((examplePoll, i) => {
                     return(
                         <TouchableOpacity key={examplePoll.poll.id} onPress={()=>handleViewPoll(examplePoll)} style={styles.wrapper}>
-                            <Poll user={examplePoll.user} pollData={examplePoll.poll}/>
+                            <Poll index={i} user={examplePoll.user} pollData={examplePoll.poll}/>
                         </TouchableOpacity>
                     )}   
                 ))}

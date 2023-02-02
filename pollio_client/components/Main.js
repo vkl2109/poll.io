@@ -19,7 +19,7 @@ export default function Main () {
                     ),
                 }}
             />
-            <Tab.Screen name="YourPolls" component={PollTab} 
+            <Tab.Screen name="Polls" component={PollTab} 
                 options={{
                     tabBarLabel: 'Polls',
                     tabBarIcon: ({ color, size }) => (

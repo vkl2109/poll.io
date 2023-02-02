@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, View, Text } from 'react-native';
+import { Animated, StyleSheet, View, Text } from 'react-native';
 import { Button, Avatar } from '@rneui/themed';
 
-export default function Poll ({ user, pollData }) {
+export default function Poll ({ index, user, pollData }) {
     const [ option1Color, setOption1Color ] = useState('#FFA500')
     const [ option2Color, setOption2Color ] = useState('#FFA500')
 
@@ -39,9 +39,24 @@ export default function Poll ({ user, pollData }) {
             }
         }
     }
+
+    const slideUp = useRef(new Animated.Value(1000)).current;
+
+    const slideIn = () => {
+        Animated.timing(slideUp, {
+        toValue: 0,
+        duration: 1000,
+        delay: index*100,
+        useNativeDriver: true,
+        }).start();
+    };
+
+    useEffect(()=>{
+        slideIn()
+    },[])
     
     return (
-        <View style={styles.pollCard}>
+        <Animated.View style={{...styles.pollCard, transform: [{ translateY: slideUp }],}}>
             <View style={styles.header}>
                 {avatarImg ? 
                 <Avatar
@@ -94,7 +109,7 @@ export default function Poll ({ user, pollData }) {
                     onPress={() => handleSelect(2)}
                     />
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
@@ -131,6 +146,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: '#FFFFFF',
-    marginVertical: 20
+    marginVertical: 20,
   }
 });
