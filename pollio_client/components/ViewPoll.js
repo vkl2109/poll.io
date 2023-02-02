@@ -1,6 +1,7 @@
 import { StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
+import Response from './Response'
 
 export default function ViewPoll ({ navigation, route }) {
     const screenWidth = Dimensions.get('window').width; 
