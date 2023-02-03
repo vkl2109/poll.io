@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Poll from './Poll'
+import PollStats from './PollStats'
 import Response from './Response'
 import * as SecureStore from 'expo-secure-store';
 
@@ -34,7 +34,7 @@ export default function ViewPoll ({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}>
-                <Poll user={pollData.user} pollData={pollData.poll}/>
+                <PollStats user={pollData.user} pollData={pollData.poll}/>
                 {responses.map((response, i) => {
                   return(
                     <Response key={i} index={i} poll = {pollData.poll} response={response}/>

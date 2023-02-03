@@ -106,6 +106,29 @@ def get_responses(id):
         print("no poll found")
         return {}, 404
 
+@app.post('/getpollstats/<int:id>')
+@jwt_required()
+def get_poll_stats(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    if poll:
+        responses = poll.responses
+        option1Tally = 0
+        option2Tally = 0
+        for response in responses:
+            if response.response == poll.option1:
+                option1Tally += 1
+            elif response.response == poll.option2:
+                option2Tally += 1
+        return jsonify({"option1Tally": option1Tally, "option2Tally": option2Tally}), 200
+    else:
+        print("no poll found")
+        return {}, 404
+
 @app.post('/deleteresponse/<int:id>')
 @jwt_required()
 def delete_response(id):
