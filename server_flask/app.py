@@ -101,7 +101,16 @@ def get_responses(id):
     poll = Poll.query.get(id)
     if poll:
         responses = poll.responses
-        return jsonify([response.to_dict() for response in responses]), 200
+        serializedRes = []
+        option1Tally = 0
+        option2Tally = 0
+        for response in responses:
+            if response.response == poll.option1:
+                option1Tally += 1
+            elif response.response == poll.option2:
+                option2Tally += 1
+            serializedRes.append(response.to_dict())
+        return jsonify({"responses": serializedRes, "option1Tally": option1Tally, "option2Tally": option2Tally}), 200
     else:
         print("no poll found")
         return {}, 404

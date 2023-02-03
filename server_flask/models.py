@@ -46,7 +46,14 @@ class Poll(db.Model):
 
     def to_dict(self):
         user = User.query.get(self.user_id)
-        return {"user": {"avatarBase64" : user.avatarBase64, "username": user.username}, "poll" : self.toJSON(), "responses" : [response.to_dict() for response in self.responses]}
+        option1Tally = 0
+        option2Tally = 0
+        for response in self.responses:
+            if response.response == self.option1:
+                option1Tally += 1
+            elif response.response == self.option2:
+                option2Tally += 1
+        return {"user": {"avatarBase64" : user.avatarBase64, "username": user.username}, "poll" : self.toJSON(), "responses" : [response.to_dict() for response in self.responses], "option1Tally": option1Tally, "option2Tally": option2Tally}
 
     def __init__(self, question, option1, option2, user_id):
         self.question = question
