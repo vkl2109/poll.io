@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import Poll from './Poll'
+import PollStats from './PollStats'
 import Response from './Response'
 
 export default function YourPoll ({ poll }) {
@@ -9,7 +9,7 @@ export default function YourPoll ({ poll }) {
     return (
         <View style={styles.wrapper}>
             <TouchableOpacity onPress={()=>setVisible(visible=>!visible)} style={styles.wrapper}>
-                <Poll user={poll.user} pollData={poll.poll}/>
+                <PollStats user={poll.user} pollData={poll.poll}/>
             </TouchableOpacity>
             {visible && (poll.responses.map((response, i)  => {
                 return (
