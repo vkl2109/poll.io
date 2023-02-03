@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import { Button, Avatar } from '@rneui/themed';
+import * as SecureStore from 'expo-secure-store';
 
 export default function Poll ({ index, user, pollData }) {
     const [ option1Color, setOption1Color ] = useState('#FFA500')
@@ -51,8 +52,35 @@ export default function Poll ({ index, user, pollData }) {
         }).start();
     };
 
-    useEffect(()=>{
+    const checkPoll = async () => {
+        let req = await fetch(`http://10.129.2.90:5000/checkpoll/${pollData['id']}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
+        let res = await req.json()
+        if (req.ok) {
+            if (res.responded) {
+                if (res.pastResponse.response == option1) {
+                    setOption1Color('#228B22')
+                    setOption2Color('#FF0000')
+                }
+                else {
+                    setOption1Color('#FF0000')
+                    setOption2Color('#228B22')
+                }
+            }
+        }
+        else {
+            console.log(res.error)
+        }
+    }
+
+    useEffect(()=> {
         slideIn()
+        checkPoll()
     },[])
     
     return (

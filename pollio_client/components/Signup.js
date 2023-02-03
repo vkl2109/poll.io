@@ -85,13 +85,13 @@ export default function Signup ({ navigation }) {
             }
         }
         if (password == confirmPassword) {
-            // signup()
+            signup()
         }
         else {
             setErrorDialog(true)
             setErrorMsg(`passwords don't match`)
         }
-        navigation.navigate('Main') // temporary
+        // navigation.navigate('Main') // temporary
     }
 
     const toggleErrorDialog = () => {

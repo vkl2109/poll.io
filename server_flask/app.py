@@ -68,6 +68,28 @@ def all_polls():
     else:
         return {}, 404
 
+@app.post('/checkpoll/<int:id>')
+@jwt_required()
+def check_poll(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    responded = False
+    pastResponse = {}
+    if poll:
+        responses = poll.responses
+        for response in responses:
+            if response.user_id == user.id:
+                responded = True
+                pastResponse = response.to_dict()
+        return jsonify({"responded" : responded, "pastResponse": pastResponse }), 200
+    else:
+        print("no poll found")
+        return {}, 404
+
 
 @app.post('/yourpolls')
 @jwt_required()
