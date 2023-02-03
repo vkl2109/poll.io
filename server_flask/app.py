@@ -184,8 +184,26 @@ def add_response(id):
 def your_polls():
     current_user = get_jwt_identity()
     user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
     polls = Poll.query.filter_by(user_id=user.id)
     return jsonify([poll.to_dict() for poll in polls]), 200
+
+@app.post('/createpoll')
+@jwt_required()
+def create_poll():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    print(user.id)
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    data = request.json
+    newPoll = Poll(question=data['question'], option1=data['option1'], option2=data['option2'], user_id=user.id)
+    db.session.add(newPoll)
+    db.session.commit()
+    return jsonify(newPoll.toJSON()), 201
 
 @socketio.on('connect')
 @jwt_required()

@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
 import { Button, Dialog } from '@rneui/themed';
+import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const screenWidth = Dimensions.get('window').width; 
@@ -20,7 +21,7 @@ export default function CreatePoll ({ navigation }) {
     }
 
     const postPoll = async () => {
-        let req = await fetch('http://10.129.2.90:8000/yourpolls', {
+        let req = await fetch('http://10.129.2.90:5000/createpoll', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,7 +33,9 @@ export default function CreatePoll ({ navigation }) {
                 "option2" : option2
             })
         })
+        let res = await req.json()
         if (req.ok) {
+            // console.log(res)
             setErrorDialog(false)
             setQuestion('')
             setOption1('')
@@ -56,8 +59,8 @@ export default function CreatePoll ({ navigation }) {
             setErrorMsg('Option 2 too long!!')
         }
         else {
-            // postPoll()
-            navigation.navigate('YourPolls')
+            postPoll()
+            // navigation.navigate('YourPolls')
         }
     }
 
