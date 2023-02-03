@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
 import { Button, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
+import { useDispatch } from 'react-redux';
+import { login as userLogin } from '../redux/reducers/userReducer'
 
 export default function Login ({ navigation }) {
     const [ username, setUsername ] = useState('')
@@ -11,6 +13,7 @@ export default function Login ({ navigation }) {
     const [ hide, setHide ] = useState(true)
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
+    const dispatch = useDispatch();
 
     const handleLogin = () => {
         const login = async () => {
@@ -24,6 +27,7 @@ export default function Login ({ navigation }) {
             })
             let res = await req.json()
             if (req.ok) {
+                dispatch(userLogin(res.user.username))
                 setErrorMsg('')
                 await SecureStore.setItemAsync('token', res.token);
                 navigation.navigate('Main')

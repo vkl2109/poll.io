@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import { Button, Avatar } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
+import { useSelector } from "react-redux"
 
 export default function PollStats ({ index, user, pollData }) {
     const [ option1Color, setOption1Color ] = useState('#FFA500')
     const [ option1Tally, setOption1Tally ] = useState(0)
     const [ option2Color, setOption2Color ] = useState('#FFA500')
     const [ option2Tally, setOption2Tally ] = useState(0)
+    const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
@@ -19,6 +21,8 @@ export default function PollStats ({ index, user, pollData }) {
     if (avatarBase64 != '') {
         avatarImg = "data:image/jpeg;base64," + avatarBase64
     }
+
+    const currentUsername = useSelector((state) => state.user)
 
     const slideUp = useRef(new Animated.Value(1000)).current;
 
@@ -60,6 +64,9 @@ export default function PollStats ({ index, user, pollData }) {
     useEffect(()=> {
         slideIn()
         getPollStats()
+        if (user['username'] == currentUsername.value) {
+            setAvatarColor('#228b22')
+        }
     },[])
     
     return (
@@ -77,7 +84,7 @@ export default function PollStats ({ index, user, pollData }) {
                     size={50}
                     rounded
                     title={username[0]}
-                    containerStyle={{ backgroundColor: '#3d4db7', margin: 10, textAlign: 'center' }}
+                    containerStyle={{ backgroundColor: avatarColor, margin: 10, textAlign: 'center' }}
                     />}
                 <Text style={styles.username}>{username} asks...</Text>
             </View>

@@ -2,16 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import { Button, Avatar } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
+import { useSelector } from "react-redux"
 
 export default function Poll ({ index, user, pollData }) {
     const [ option1Color, setOption1Color ] = useState('#FFA500')
     const [ option2Color, setOption2Color ] = useState('#FFA500')
+    const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
     let question = pollData['question']
     let option1 = pollData['option1']
     let option2 = pollData['option2']
+
+    const currentUsername = useSelector((state) => state.user)
     
     let avatarImg = null
     if (avatarBase64 != '') {
@@ -137,6 +141,9 @@ export default function Poll ({ index, user, pollData }) {
     useEffect(()=> {
         slideIn()
         checkPoll()
+        if (user['username'] == currentUsername.value) {
+            setAvatarColor('#228b22')
+        }
     },[])
     
     return (
@@ -154,7 +161,7 @@ export default function Poll ({ index, user, pollData }) {
                     size={50}
                     rounded
                     title={username[0]}
-                    containerStyle={{ backgroundColor: '#3d4db7', margin: 10, textAlign: 'center' }}
+                    containerStyle={{ backgroundColor: avatarColor, margin: 10, textAlign: 'center' }}
                     />}
                 <Text style={styles.username}>{username} asks...</Text>
             </View>
