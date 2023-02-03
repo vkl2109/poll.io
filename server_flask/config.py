@@ -7,4 +7,5 @@ class Config:
         'SQLALCHEMY_DATABASE_URI', 'postgresql://vincent@localhost/pollio')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = "abc123"
+    JWT_ACCESS_TOKEN_EXPIRES = False
     DEBUG = True

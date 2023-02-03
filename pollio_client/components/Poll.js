@@ -70,22 +70,30 @@ export default function Poll ({ index, user, pollData }) {
         }
     }
 
-    const handleSelect = (option) => {
+    const handleSelect = async (option) => {
         if (option == 1) {
             if (option1Color == '#228B22') {
-                deleteResponse()
+                await deleteResponse()
             }
-            else {
-                addResponse(option)
+            else if (option1Color == '#FF0000') {
+                await deleteResponse()
+                await addResponse(option)
             }
+            else (
+                await addResponse(option)
+            )
         }
         else {
             if (option2Color == '#228B22') {
-                deleteResponse()
+                await deleteResponse()
             }
-            else {
-                addResponse(option)
+            else if (option2Color == '#FF0000') {
+                await deleteResponse()
+                await addResponse(option)
             }
+            else (
+                await addResponse(option)
+            )
         }
     }
 

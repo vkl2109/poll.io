@@ -90,6 +90,22 @@ def check_poll(id):
         print("no poll found")
         return {}, 404
 
+@app.post('/getresponses/<int:id>')
+@jwt_required()
+def get_responses(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    if poll:
+        responses = poll.responses
+        return jsonify([response.to_dict() for response in responses]), 200
+    else:
+        print("no poll found")
+        return {}, 404
+
 @app.post('/deleteresponse/<int:id>')
 @jwt_required()
 def delete_response(id):
@@ -131,7 +147,7 @@ def add_response(id):
                 print("already responded")
                 return {{'error': 'already responded'}}, 404
         data = request.json
-        newResponse = User(data['response'], user.id, poll.id)
+        newResponse = Response(data['response'], user.id, poll.id)
         db.session.add(newResponse)
         db.session.commit()
         return jsonify(newResponse.to_dict()), 201
