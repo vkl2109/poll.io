@@ -1,9 +1,14 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text, Dimensions } from 'react-native'
+import { useSelector } from "react-redux"
 
 const screenWidth = Dimensions.get('window').width; 
 
 export default function Response ({ index, poll, response }) {
+    const [ font, setFont ] = useState('normal')
+
+    const currentUsername = useSelector((state) => state.user)
+
     let color = ''
     let option = ''
     if (response.response == poll.option1) {
@@ -28,11 +33,14 @@ export default function Response ({ index, poll, response }) {
 
     useEffect(()=>{
         slideIn()
+        if (response.username == currentUsername.value) {
+            setFont('bold')
+        }
     },[])
 
     return(
         <Animated.View style={{ ...styles.responseWrapper, backgroundColor: color, alignSelf: option, transform: [{ translateY: slideUp }]}}>
-            <Text>{response.username} voted {response.response}</Text>
+            <Text style={{fontWeight: font}}>{response.username} voted {response.response}</Text>
         </Animated.View>
     )
 }
