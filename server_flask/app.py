@@ -90,6 +90,55 @@ def check_poll(id):
         print("no poll found")
         return {}, 404
 
+@app.post('/deleteresponse/<int:id>')
+@jwt_required()
+def delete_response(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    responseID = None
+    if poll:
+        responses = poll.responses
+        for response in responses:
+            if response.user_id == user.id:
+                responseID = response.id
+                userResponse = Response.query.get(responseID)
+                db.session.delete(userResponse)
+                db.session.commit()
+                return {}, 200
+        print("no response found")
+        return {}, 404
+    else:
+        print("no poll found")
+        return {}, 404
+
+@app.post('/addresponse/<int:id>')
+@jwt_required()
+def add_response(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    if poll:
+        responses = poll.responses
+        for response in responses:
+            if response.user_id == user.id:
+                print("already responded")
+                return {{'error': 'already responded'}}, 404
+        data = request.json
+        newResponse = User(data['response'], user.id, poll.id)
+        db.session.add(newResponse)
+        db.session.commit()
+        return jsonify(newResponse.to_dict()), 201
+    else:
+        print("no poll found")
+        return {}, 404
+
 
 @app.post('/yourpolls')
 @jwt_required()

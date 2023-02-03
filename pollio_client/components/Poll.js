@@ -18,25 +18,73 @@ export default function Poll ({ index, user, pollData }) {
         avatarImg = "data:image/jpeg;base64," + avatarBase64
     }
 
-    const handleSelect = (option) => {
-        if (option == 1) {
-            if (option1Color == '#228B22') {
-                setOption1Color('#FFA500')
-                setOption2Color('#FFA500')
+    const deleteResponse = async () => {
+        let req = await fetch(`http://10.129.2.90:5000/deleteresponse/${pollData['id']}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
             }
-            else {
-                setOption1Color('#228B22')
-                setOption2Color('#FF0000')
-            }
+        })
+        let res = await req.json()
+        if (req.ok) {
+            setOption1Color('#FFA500')
+            setOption2Color('#FFA500')
         }
         else {
-            if (option2Color == '#228B22') {
-                setOption1Color('#FFA500')
-                setOption2Color('#FFA500')
+            console.log(res.error)
+        }
+    }
+
+    const addResponse = async (option) => {
+        let response = ''
+        if (option == 1) {
+            response = option1
+        }
+        else {
+            response = option2
+        }
+        let req = await fetch(`http://10.129.2.90:5000/addresponse/${pollData['id']}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                "response" : response
+            })
+        })
+        let res = await req.json()
+        if (req.ok) {
+            if (option == 1) {
+                setOption1Color('#228B22')
+                setOption2Color('#FF0000')
             }
             else {
                 setOption1Color('#FF0000')
                 setOption2Color('#228B22')
+            }
+        }
+        else {
+            console.log(res.error)
+        }
+    }
+
+    const handleSelect = (option) => {
+        if (option == 1) {
+            if (option1Color == '#228B22') {
+                deleteResponse()
+            }
+            else {
+                addResponse(option)
+            }
+        }
+        else {
+            if (option2Color == '#228B22') {
+                deleteResponse()
+            }
+            else {
+                addResponse(option)
             }
         }
     }
