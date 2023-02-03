@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { Animated, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react'
+import { Animated, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Feed ({ navigation }) {
     const [ allPolls, setAllPolls ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ refreshing, setRefreshing ] = useState(false);
 
-    useEffect(()=>{
-        const request = async () => {
+    const getAllPolls = async () => {
+            setRefreshing(true)
             let req = await fetch('http://10.129.2.90:5000/polls')
             if (req.ok) {
                 let res = await req.json()
@@ -18,9 +20,17 @@ export default function Feed ({ navigation }) {
             else {
                 console.log(req.error)
             }
+            setRefreshing(false)
         }
-        request()
+    useEffect(()=>{
+        getAllPolls()
     },[])
+
+    useFocusEffect(
+        useCallback(() => {
+            getAllPolls()
+        }, [])
+    );
 
     const screenWidth = Dimensions.get('window').width; 
 
@@ -30,7 +40,10 @@ export default function Feed ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}} 
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={getAllPolls} />
+                }>
                 {isLoading ? <Text>Loading...</Text> :
                 (allPolls.map((examplePoll, i) => {
                     return(

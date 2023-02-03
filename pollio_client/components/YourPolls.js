@@ -1,36 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react'
+import { RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPoll from './YourPoll'
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function YourPolls ({ navigation }) {
     const [ yourPolls, setYourPolls ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ refreshing, setRefreshing ] = useState(false);
 
+    const getYourPolls = async () => {
+        setRefreshing(true)
+        let req = await fetch('http://10.129.2.90:5000/yourpolls', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
+        if (req.ok) {
+            let res = await req.json()
+            setYourPolls(res)
+            setIsLoading(false)
+        }
+        setRefreshing(false)
+    }
 
     useEffect(()=>{
-        const request = async () => {
-            let req = await fetch('http://10.129.2.90:5000/yourpolls', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
-                }
-            })
-            if (req.ok) {
-                let res = await req.json()
-                setYourPolls(res)
-                setIsLoading(false)
-            }
-        }
-        request()
+        getYourPolls()
     },[])
+
+    useFocusEffect(
+        useCallback(() => {
+            getYourPolls()
+        }, [])
+    );
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={getYourPolls} />
+                }>
                 <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate('CreatePoll')}>
                     <Text style={styles.createText}>Create a Poll!</Text>
                 </TouchableOpacity>
