@@ -13,7 +13,7 @@ export default function ViewPoll ({ navigation, route }) {
                 <Poll user={pollData.user} pollData={pollData.poll}/>
                 {pollData.responses.map((response, i) => {
                   return(
-                    <Response key={i} poll = {pollData.poll} response={response}/>
+                    <Response key={i} index={i} poll = {pollData.poll} response={response}/>
                   )
                 })}
             </ScrollView>

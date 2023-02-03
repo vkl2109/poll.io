@@ -42,9 +42,30 @@ export default function Signup ({ navigation }) {
         })();
     }, []);
 
+    const login = async () => {
+        let req = await fetch("http://10.129.2.90:5000/login", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            })
+        })
+        let res = await req.json()
+        if (req.ok) {
+            setErrorMsg('')
+            await SecureStore.setItemAsync('token', res.token);
+            navigation.navigate('Main')
+        }
+        else {
+            setErrorDialog(true)
+            setErrorMsg(res.error)
+        }
+    }
+
     const handleSignUp = () => {
         const signup = async () => {
-            let req = await fetch("http://10.129.2.90:8000/signup", {
+            let req = await fetch("http://10.129.2.90:5000/signup", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -56,7 +77,7 @@ export default function Signup ({ navigation }) {
             let res = await req.json()
             if (req.ok) {
                 setErrorMsg('')
-                navigation.navigate('Main')
+                login()
             }
             else {
                 setErrorDialog(true)

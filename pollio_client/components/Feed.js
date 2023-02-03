@@ -9,11 +9,14 @@ export default function Feed ({ navigation }) {
 
     useEffect(()=>{
         const request = async () => {
-            let req = await fetch('http://10.129.2.90:8000/polls')
+            let req = await fetch('http://10.129.2.90:5000/polls')
             if (req.ok) {
                 let res = await req.json()
                 setAllPolls(res)
                 setIsLoading(false)
+            }
+            else {
+                console.log(req.error)
             }
         }
         request()

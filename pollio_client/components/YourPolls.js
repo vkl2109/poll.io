@@ -12,7 +12,7 @@ export default function YourPolls ({ navigation }) {
 
     useEffect(()=>{
         const request = async () => {
-            let req = await fetch('http://10.129.2.90:8000/yourpolls', {
+            let req = await fetch('http://10.129.2.90:5000/yourpolls', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

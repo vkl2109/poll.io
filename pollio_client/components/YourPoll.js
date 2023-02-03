@@ -13,7 +13,7 @@ export default function YourPoll ({ poll }) {
             </TouchableOpacity>
             {visible && (poll.responses.map((response, i)  => {
                 return (
-                    <Response key={i} poll={poll.poll} response={response}/>
+                    <Response key={i} index={i} poll={poll.poll} response={response}/>
                 )
             }))}
         </View>

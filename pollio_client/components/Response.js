@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, View, Text, Dimensions } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Animated, StyleSheet, View, Text, Dimensions } from 'react-native'
 
 const screenWidth = Dimensions.get('window').width; 
 
 
-export default function Response ({ poll, response }) {
+export default function Response ({ index, poll, response }) {
     let color = ''
     let option = ''
     if (response.response == poll.option1) {
@@ -16,10 +16,25 @@ export default function Response ({ poll, response }) {
         color = '#ffcccb'
     }
 
+    const slideUp = useRef(new Animated.Value(1000)).current;
+
+    const slideIn = () => {
+        Animated.timing(slideUp, {
+        toValue: 0,
+        duration: 1000,
+        delay: index*100 + 100,
+        useNativeDriver: true,
+        }).start();
+    };
+
+    useEffect(()=>{
+        slideIn()
+    },[])
+
     return(
-        <View style={{ ...styles.responseWrapper, backgroundColor: color, alignSelf: option}}>
+        <Animated.View style={{ ...styles.responseWrapper, backgroundColor: color, alignSelf: option, transform: [{ translateY: slideUp }]}}>
             <Text>{response.username} voted {response.response}</Text>
-        </View>
+        </Animated.View>
     )
 }
 
