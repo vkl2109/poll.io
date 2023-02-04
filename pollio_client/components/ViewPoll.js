@@ -13,7 +13,7 @@ export default function ViewPoll ({ navigation, route }) {
     const { pollData } = route.params;
     
     const getResponses = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/getresponses/${pollData.poll.id}`, {
+        let req = await fetch(`http://192.168.1.210:5000/getresponses/${pollData.poll.id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
