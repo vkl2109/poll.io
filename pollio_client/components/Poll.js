@@ -23,7 +23,7 @@ export default function Poll ({ index, user, pollData }) {
     }
 
     const deleteResponse = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/deleteresponse/${pollData['id']}`, {
+        let req = await fetch(`http://192.168.1.210:5000/deleteresponse/${pollData['id']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export default function Poll ({ index, user, pollData }) {
         else {
             response = option2
         }
-        let req = await fetch(`http://10.129.2.90:5000/addresponse/${pollData['id']}`, {
+        let req = await fetch(`http://192.168.1.210:5000/addresponse/${pollData['id']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export default function Poll ({ index, user, pollData }) {
     };
 
     const checkPoll = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/checkpoll/${pollData['id']}`, {
+        let req = await fetch(`http://192.168.1.210:5000/checkpoll/${pollData['id']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
