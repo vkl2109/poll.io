@@ -10,6 +10,8 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
+import { useDispatch } from 'react-redux';
+import { login as userLogin } from '../redux/reducers/userReducer'
 
 export default function Signup ({ navigation }) {
     const [ username, setUsername ] = useState('')
@@ -27,6 +29,7 @@ export default function Signup ({ navigation }) {
     const [ library, setLibrary ] = useState(false)
     const [status, requestPermission] = MediaLibrary.usePermissions();
     const imageRef = useRef();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         (async () => {
@@ -53,6 +56,7 @@ export default function Signup ({ navigation }) {
         let res = await req.json()
         if (req.ok) {
             setErrorMsg('')
+            dispatch(userLogin(res.user.username))
             await SecureStore.setItemAsync('token', res.token);
             navigation.navigate('Main')
         }

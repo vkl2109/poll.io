@@ -9,6 +9,8 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
+import { useDispatch } from 'react-redux';
+import { logout as userLogout } from '../redux/reducers/userReducer'
 
 export default function Profile ({ navigation }) {
     const [ profile, setProfile ] = useState()
@@ -16,7 +18,8 @@ export default function Profile ({ navigation }) {
     const [ avatarImg, setAvatarImg ] = useState(null)
     const [ refreshing, setRefreshing ] = useState(false);
     const [ viewMenu, setViewMenu ] = useState(false);
-    
+    const dispatch = useDispatch();
+
     const getProfile = async () => {
         setLoading(true)
         setRefreshing(true)
@@ -88,6 +91,12 @@ export default function Profile ({ navigation }) {
         setAvatarImg(null)
         await updateUser('')
         setLoading(false)
+    }
+
+    const handleLogout = async () => {
+        await SecureStore.deleteItemAsync('token')
+        dispatch(userLogout())
+        navigation.navigate('Login')
     }
 
     useEffect(() => {
@@ -168,6 +177,22 @@ export default function Profile ({ navigation }) {
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
                     </Avatar>
                     <Text>{profile.username}</Text>
+                    <Button
+                        title={"LOG OUT"}
+                        buttonStyle={{
+                            backgroundColor: '#369F8E',
+                            borderWidth: 0,
+                            borderColor: 'white',
+                            borderRadius: 30,
+                        }}
+                        containerStyle={{
+                            width: 200,
+                            marginHorizontal: 50,
+                            marginVertical: 10,
+                        }}
+                        titleStyle={{ fontWeight: 'bold' }}
+                        onPress={() => handleLogout()}
+                        />
                 </View>}
             </ScrollView>
         </SafeAreaView>
