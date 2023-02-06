@@ -7,7 +7,7 @@ const Stack = createNativeStackNavigator();
 export default function PollTab () {
     return(
         <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
-            <Stack.Screen name='Profile' component={Profile} />
+            <Stack.Screen name='ProfileMain' component={Profile} />
             <Stack.Screen name='ProfileCamera' component={ProfileCamera} />
         </Stack.Navigator>
     )

@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
 import PollTab from './PollTab'
 import Friends from './Friends'
-import Profile from './Profile'
+import ProfileTab from './ProfileTab'
 import { Icon } from '@rneui/themed';
 
 
@@ -35,7 +35,7 @@ export default function Main () {
                     ),
                 }}
             />
-            <Tab.Screen name="Profile" component={Profile}
+            <Tab.Screen name="Profile" component={ProfileTab}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color, size }) => (

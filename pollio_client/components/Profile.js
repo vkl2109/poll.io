@@ -10,7 +10,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 
-export default function Profile () {
+export default function Profile ({ navigation }) {
     const [ profile, setProfile ] = useState()
     const [ loading, setLoading ] = useState(true)
     const [ avatarImg, setAvatarImg ] = useState(null)
@@ -30,23 +30,41 @@ export default function Profile () {
         let res = await req.json()
         if (req.ok) {
             setProfile(res)
+            // console.log(res)
             if (res.avatarBase64 != '') {
-                let img = "data:image/jpeg;base64," + avatarBase64
+                let img = "data:image/jpeg;base64," + res.avatarBase64
                 setAvatarImg(img)
             }
             else {
                 setAvatarImg(null)
             }
-            setLoading(false)
         }
         else {
             console.log(res.error)
         }
+        setLoading(false)
         setRefreshing(false)
     }
 
     const updateUser = async (base64) => {
-        
+        let req = await fetch('http://192.168.1.210:5000/profile', {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                avatarBase64: base64,
+            })
+        })
+        if (req.ok) {
+            setViewMenu(false)
+        }
+    }
+
+    const handleCamera = () => {
+        setViewMenu(false)
+        navigation.navigate('ProfileCamera')
     }
 
     const pickImage = async () => {
@@ -59,17 +77,16 @@ export default function Profile () {
 
         if (!result.canceled) {
             const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, { encoding: 'base64' });
-            updateUser(base64)
+            await updateUser(base64)
             const img = "data:image/jpeg;base64," + base64
             setAvatarImg(img)
-            setViewMenu(false)
         }
     };
 
-    const handleX = () => {
+    const handleX = async () => {
         setLoading(true)
         setAvatarImg(null)
-        setViewMenu(false)
+        await updateUser('')
         setLoading(false)
     }
 

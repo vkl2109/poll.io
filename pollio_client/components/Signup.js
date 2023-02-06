@@ -28,10 +28,6 @@ export default function Signup ({ navigation }) {
     const [status, requestPermission] = MediaLibrary.usePermissions();
     const imageRef = useRef();
 
-    if (status === null) {
-        requestPermission();
-    }
-
     useEffect(() => {
         (async () => {
             const cameraStatus = await Camera.requestCameraPermissionsAsync();
@@ -40,10 +36,13 @@ export default function Signup ({ navigation }) {
                 alert("No Access to Camera");
             }
         })();
+        if (status === null) {
+            requestPermission();
+        }
     }, []);
 
     const login = async () => {
-        let req = await fetch("http://10.129.2.90:5000/login", {
+        let req = await fetch("http://192.168.1.210:5000/login", {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -65,7 +64,7 @@ export default function Signup ({ navigation }) {
 
     const handleSignUp = () => {
         const signup = async () => {
-            let req = await fetch("http://10.129.2.90:5000/signup", {
+            let req = await fetch("http://192.168.1.210:5000/signup", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -77,6 +76,9 @@ export default function Signup ({ navigation }) {
             let res = await req.json()
             if (req.ok) {
                 setErrorMsg('')
+                setUsername('')
+                setPassword('')
+                setConfirmPassword('')
                 login()
             }
             else {

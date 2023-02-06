@@ -21,6 +21,20 @@ def home():
     return send_file('welcome.html')
 
 
+@app.patch('/profile')
+@jwt_required()
+def patch_user():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        return jsonify({'error': 'No account found'}), 404
+    else: 
+        data = request.json
+        user.avatarBase64 = data['avatarBase64']
+        db.session.commit()
+        return jsonify(user.toJSON()), 202
+    
+
 @app.post('/login')
 def login():
     data = request.json

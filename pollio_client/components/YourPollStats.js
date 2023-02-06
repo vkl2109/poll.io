@@ -56,7 +56,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
                 <Avatar
                     size={50}
                     rounded
-                    source={avatarImg}
+                    source={{ uri : avatarImg}}
                     containerStyle={{ margin: 10 }}
                     /> 
                 :
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     width: 'auto',
-    marginHorizontal: 20,
+    marginHorizontal: 5,
     marginVertical: 10,
   },
   optionText: {

@@ -31,6 +31,8 @@ export default function Login ({ navigation }) {
                 setErrorMsg('')
                 await SecureStore.setItemAsync('token', res.token);
                 navigation.navigate('Main')
+                setUsername('')
+                setPassword('')
             }
             else {
                 setErrorDialog(true)

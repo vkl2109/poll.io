@@ -153,7 +153,7 @@ export default function Poll ({ index, user, pollData }) {
                 <Avatar
                     size={50}
                     rounded
-                    source={avatarImg}
+                    source={{ uri : avatarImg}}
                     containerStyle={{ margin: 10 }}
                     /> 
                 :
