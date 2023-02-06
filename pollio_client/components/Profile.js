@@ -18,6 +18,7 @@ export default function Profile () {
     const [ viewMenu, setViewMenu ] = useState(false);
     
     const getProfile = async () => {
+        setLoading(true)
         setRefreshing(true)
         let req = await fetch(`http://192.168.1.210:5000/autologin`, {
             method: 'POST',
@@ -32,6 +33,9 @@ export default function Profile () {
             if (res.avatarBase64 != '') {
                 let img = "data:image/jpeg;base64," + avatarBase64
                 setAvatarImg(img)
+            }
+            else {
+                setAvatarImg(null)
             }
             setLoading(false)
         }
@@ -58,8 +62,16 @@ export default function Profile () {
             updateUser(base64)
             const img = "data:image/jpeg;base64," + base64
             setAvatarImg(img)
+            setViewMenu(false)
         }
     };
+
+    const handleX = () => {
+        setLoading(true)
+        setAvatarImg(null)
+        setViewMenu(false)
+        setLoading(false)
+    }
 
     useEffect(() => {
         getProfile()
@@ -69,7 +81,7 @@ export default function Profile () {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}
             refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={getProfile} />
+                    <RefreshControl refreshing={refreshing} onRefresh={() => getProfile()} />
                 }>
                 {loading ? <ActivityIndicator size="large" /> :
                 <View style={styles.feed}>
@@ -89,11 +101,27 @@ export default function Profile () {
                                 }}
                                 containerStyle={{
                                     width: 100,
-                                    marginHorizontal: 10,
+                                    marginHorizontal: 5,
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => handleLibrary()}
+                                onPress={() => pickImage()}
+                                />
+                            <Button
+                                title={"X"}
+                                buttonStyle={{
+                                    backgroundColor: '#369F8E',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 40,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleX()}
                                 />
                             <Button
                                 title={"Camera"}
@@ -105,7 +133,7 @@ export default function Profile () {
                                 }}
                                 containerStyle={{
                                     width: 100,
-                                    marginHorizontal: 10,
+                                    marginHorizontal: 5,
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
@@ -113,24 +141,15 @@ export default function Profile () {
                                 />
                         </View>
                     </Dialog>
-                    {avatarImg ? 
-                    <Avatar
-                        size={150}
-                        rounded
-                        source={avatarImg}
-                        containerStyle={{ margin: 10 }}
-                        >
-                        <Avatar.Accessory size={23} />
-                    </Avatar> 
-                    :
                     <Avatar
                         size={150}
                         rounded
                         title={profile.username[0]}
+                        source={avatarImg && {uri : avatarImg }}
                         containerStyle={{ backgroundColor: '#228b22', margin: 10, textAlign: 'center' }}
                         >
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
-                    </Avatar> }
+                    </Avatar>
                     <Text>{profile.username}</Text>
                 </View>}
             </ScrollView>
