@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPoll from './YourPoll'
 import * as SecureStore from 'expo-secure-store';
@@ -50,7 +50,7 @@ export default function YourPolls ({ navigation }) {
                 <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate('CreatePoll')}>
                     <Text style={styles.createText}>Create a Poll!</Text>
                 </TouchableOpacity>
-                {isLoading ? <Text>Loading...</Text> :
+                {isLoading ? <ActivityIndicator size="large" /> :
                 (yourPolls.map((poll, i) => {
                     return(
                         <View key={i} style={styles.wrapper}>

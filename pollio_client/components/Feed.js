@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Animated, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Animated, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Poll from './Poll'
 import { useFocusEffect } from '@react-navigation/native';
@@ -44,7 +44,7 @@ export default function Feed ({ navigation }) {
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getAllPolls} />
                 }>
-                {isLoading ? <Text>Loading...</Text> :
+                {isLoading ? <ActivityIndicator size="large" /> :
                 (allPolls.map((examplePoll, i) => {
                     return(
                         <TouchableOpacity key={examplePoll.poll.id} onPress={()=>handleViewPoll(examplePoll)} style={styles.wrapper}>

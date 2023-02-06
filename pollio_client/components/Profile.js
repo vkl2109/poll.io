@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { RefreshControl, StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
+import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Avatar } from '@rneui/themed';
 const screenWidth = Dimensions.get('window').width; 
@@ -10,7 +10,7 @@ export default function Profile () {
     const [ loading, setLoading ] = useState(true)
     const [ avatarImg, setAvatarImg ] = useState(null)
     const [ refreshing, setRefreshing ] = useState(false);
-
+    const [ viewMenu, setViewMenu ] = useState(false);
     
     const getProfile = async () => {
         setRefreshing(true)
@@ -47,11 +47,7 @@ export default function Profile () {
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getProfile} />
                 }>
-                {loading ? 
-                <View> 
-                    <Text>Loading</Text>
-                </View>
-                :
+                {loading ? <ActivityIndicator size="large" /> :
                 <View style={styles.feed}>
                     {avatarImg ? 
                     <Avatar
@@ -59,14 +55,18 @@ export default function Profile () {
                         rounded
                         source={avatarImg}
                         containerStyle={{ margin: 10 }}
-                        /> 
+                        >
+                        <Avatar.Accessory size={23} />
+                    </Avatar> 
                     :
                     <Avatar
                         size={150}
                         rounded
                         title={profile.username[0]}
                         containerStyle={{ backgroundColor: '#228b22', margin: 10, textAlign: 'center' }}
-                        />}
+                        >
+                        <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
+                    </Avatar> }
                     <Text>{profile.username}</Text>
                 </View>}
             </ScrollView>
