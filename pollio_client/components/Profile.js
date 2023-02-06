@@ -4,11 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Avatar, Dialog } from '@rneui/themed';
 const screenWidth = Dimensions.get('window').width; 
 import * as SecureStore from 'expo-secure-store';
-import { captureRef } from 'react-native-view-shot';
-import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
-import { Camera } from 'expo-camera';
+
 import { useDispatch } from 'react-redux';
 import { logout as userLogout } from '../redux/reducers/userReducer'
 
