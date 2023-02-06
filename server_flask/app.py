@@ -42,7 +42,6 @@ def login():
 @jwt_required()
 def auto_login():
     current_user = get_jwt_identity()
-    print('user_id is', current_user)
 
     user = User.query.get(int(current_user))
 
