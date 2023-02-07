@@ -17,6 +17,7 @@ export default function Profile ({ navigation }) {
     const [ avatarImg, setAvatarImg ] = useState(null)
     const [ refreshing, setRefreshing ] = useState(false);
     const [ viewMenu, setViewMenu ] = useState(false);
+    const [ deleteView, setDeleteView ] = useState(false);
     const dispatch = useDispatch();
 
     const getProfile = async () => {
@@ -92,6 +93,11 @@ export default function Profile ({ navigation }) {
         setLoading(false)
     }
 
+    const toggleDeleteView = () => {
+        setViewMenu(viewMenu => !viewMenu)
+        setDeleteView(deleteView => !deleteView)
+    }
+
     const handleLogout = async () => {
         await SecureStore.deleteItemAsync('token')
         dispatch(userLogout())
@@ -117,6 +123,46 @@ export default function Profile ({ navigation }) {
                 {loading ? <ActivityIndicator size="large" /> :
                 <View style={styles.feed}>
                     <Dialog
+                        isVisible={deleteView}
+                        onBackdropPress={() => toggleDeleteView()}
+                        >
+                        <Dialog.Title style={styles.dialogTitle} title={"Delete Avatar?"} />
+                        <View style={styles.buttonContainer}> 
+                            <Button
+                                title={"Yes"}
+                                buttonStyle={{
+                                    backgroundColor: 'green',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleX()}
+                                />
+                            <Button
+                                title={"No"}
+                                buttonStyle={{
+                                    backgroundColor: 'red',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => toggleDeleteView()}
+                                />
+                        </View> 
+                    </Dialog>
+                    <Dialog
                         isVisible={viewMenu}
                         onBackdropPress={() => setViewMenu(false)}
                         >
@@ -141,7 +187,7 @@ export default function Profile ({ navigation }) {
                             <Button
                                 title={"X"}
                                 buttonStyle={{
-                                    backgroundColor: '#369F8E',
+                                    backgroundColor: 'red',
                                     borderWidth: 0,
                                     borderColor: 'white',
                                     borderRadius: 30,
@@ -152,7 +198,7 @@ export default function Profile ({ navigation }) {
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => handleX()}
+                                onPress={() => toggleDeleteView()}
                                 />
                             <Button
                                 title={"Camera"}
