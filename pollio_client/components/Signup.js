@@ -34,32 +34,32 @@ export default function Signup ({ navigation }) {
 
     useEffect(() => {
         setLoading(false)
-        if (currentAvatar != '') {
-            const img = "data:image/jpeg;base64," + currentAvatar
-            setAvatarImg(img);
-        }
-        else {
-            setAvatarImg(null)
-        }
+        // if (currentAvatar != '') {
+        //     const img = "data:image/jpeg;base64," + currentAvatar
+        //     setAvatarImg(img);
+        // }
+        // else {
+        //     setAvatarImg(null)
+        // }
         if (status === null) {
             requestPermission();
         }
         setLoading(true)
     }, []);
 
-    useFocusEffect(
-        useCallback(() => {
-            setLoading(false)
-            if (currentAvatar != '') {
-                const img = "data:image/jpeg;base64," + currentAvatar
-                setAvatarImg(img);
-            }
-            else {
-                setAvatarImg(null)
-            }
-            setLoading(true)
-        }, [])
-    );
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         setLoading(false)
+    //         if (currentAvatar != '') {
+    //             const img = "data:image/jpeg;base64," + currentAvatar
+    //             setAvatarImg(img);
+    //         }
+    //         else {
+    //             setAvatarImg(null)
+    //         }
+    //         setLoading(true)
+    //     }, [])
+    // );
 
     const login = async () => {
         let req = await fetch("http://10.129.2.90:5000/login", {
@@ -187,15 +187,25 @@ export default function Signup ({ navigation }) {
                         />
                 </View>
                 <View style={styles.container}>
+                    {avatarImg ? 
                     <Avatar
                         size={150}
                         rounded
-                        icon={{ name: 'user', type: 'font-awesome' }}
-                        source={avatarImg && {uri : avatarImg}}                       
+                        source={{uri : avatarImg}}                       
                         containerStyle={{backgroundColor: '#228b22'}}
                         >
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
                     </Avatar>
+                    :
+                    <Avatar
+                        size={150}
+                        rounded
+                        source={null}
+                        icon={{ name: 'user', type: 'font-awesome' }}                    
+                        iconStyle={{backgroundColor: '#228b22', height: 150, width: 150, justifyContent: 'center'}}
+                        >
+                        <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
+                    </Avatar>}
                         <Dialog
                             isVisible={deleteView}
                             onBackdropPress={() => toggleDeleteView()}

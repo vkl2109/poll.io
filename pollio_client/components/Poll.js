@@ -161,7 +161,8 @@ export default function Poll ({ index, user, pollData }) {
                     size={50}
                     rounded
                     title={username[0]}
-                    containerStyle={{ backgroundColor: avatarColor, margin: 10, textAlign: 'center' }}
+                    containerStyle={{ margin: 10, display: 'flex'}}
+                    titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
                     />}
                 <Text style={styles.username}>{username} asks...</Text>
             </View>

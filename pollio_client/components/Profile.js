@@ -331,11 +331,12 @@ export default function Profile ({ navigation }) {
                             borderRadius: 30,
                         }}
                         containerStyle={{
+                            height: 80,
                             width: 200,
                             marginHorizontal: 50,
-                            marginVertical: 10,
+                            marginVertical: 20,
                         }}
-                        titleStyle={{ fontWeight: 'bold' }}
+                        titleStyle={{ fontWeight: 'bold', fontSize: 22 }}
                         onPress={() => handleLogout()}
                         />
                 </View>}
