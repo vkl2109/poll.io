@@ -14,6 +14,7 @@ export default function Login ({ navigation }) {
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
     const dispatch = useDispatch();
+    const logoUrl = require('../assets/pollmate_logo.png')
 
     const handleLogin = () => {
         const login = async () => {
@@ -53,7 +54,7 @@ export default function Login ({ navigation }) {
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <View style={styles.container}>
                     <View style={styles.imageContainer}>
-                        <Image source={{uri: 'https://media.giphy.com/media/BSNYKSeQSzxSw/giphy.gif'}} style={styles.image} ></Image>
+                        <Image source={logoUrl} style={styles.image} ></Image>
                     </View>
                     <View style={styles.loginContainer}>
                         <Dialog
