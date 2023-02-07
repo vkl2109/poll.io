@@ -21,7 +21,7 @@ export default function Profile ({ navigation }) {
     const getProfile = async () => {
         setLoading(true)
         setRefreshing(true)
-        let req = await fetch(`http://192.168.1.210:5000/autologin`, {
+        let req = await fetch(`http://10.129.2.90:5000/autologin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export default function Profile ({ navigation }) {
     }
 
     const updateUser = async (base64) => {
-        let req = await fetch('http://192.168.1.210:5000/profile', {
+        let req = await fetch('http://10.129.2.90:5000/profile', {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ export default function Feed ({ navigation }) {
 
     const getAllPolls = async () => {
             setRefreshing(true)
-            let req = await fetch('http://192.168.1.210:5000/polls')
+            let req = await fetch('http://10.129.2.90:5000/polls')
             if (req.ok) {
                 let res = await req.json()
                 setAllPolls(res)

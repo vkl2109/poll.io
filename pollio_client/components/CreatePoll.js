@@ -21,7 +21,7 @@ export default function CreatePoll ({ navigation }) {
     }
 
     const postPoll = async () => {
-        let req = await fetch('http://192.168.1.210:5000/createpoll', {
+        let req = await fetch('http://10.129.2.90:5000/createpoll', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
