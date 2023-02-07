@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useCallback  } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { StyleSheet, ScrollView, View, Text, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
-import { Button, Dialog, Icon, Avatar } from '@rneui/themed';
+import { Button, Dialog, Overlay, Icon, Avatar } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as SecureStore from 'expo-secure-store';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
+import { Camera } from 'expo-camera';
+import { captureRef } from 'react-native-view-shot';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { login as userLogin } from '../redux/reducers/userReducer'
@@ -28,11 +30,54 @@ export default function Signup ({ navigation }) {
     const [ status, requestPermission ] = MediaLibrary.usePermissions();
     const [ viewMenu, setViewMenu ] = useState(false);
     const [ deleteView, setDeleteView ] = useState(false);
+    const [ viewCamera, setViewCamera ] = useState(false);
     const [ loading, setLoading ] = useState(true)
+    const [ hasCameraPermission, setHasCameraPermission ] = useState(null);
+    const [ camera, setCamera ] = useState(null);
+    const [ tempPic, setTempPic ] = useState()
     const dispatch = useDispatch();
     const currentAvatar = useSelector((state) => state.avatar)
+    const imageRef = useRef();
+
+    const takePicture = async () => {
+        if (camera) {
+            const data = await camera.takePictureAsync(null)
+            const base64 = await FileSystem.readAsStringAsync(data.uri, { encoding: 'base64' });
+            setTempPic(base64);
+        }
+    }
+
+    const sendImage = () => {
+        const img = "data:image/jpeg;base64," + tempPic
+        setAvatarImg(img);
+        setViewCamera(false)
+        setViewMenu(false)
+    }
+
+    const onSaveImageAsync = async () => {
+        try {
+            const localUri = await captureRef(imageRef, {
+                height: 440,
+                quality: 1
+            });
+
+            await MediaLibrary.saveToLibraryAsync(localUri);
+            if (localUri) {
+                alert("Saved!");
+            }
+        } catch (e) {
+            alert(e);
+        }
+    };
 
     useEffect(() => {
+        (async () => {
+            const cameraStatus = await Camera.requestCameraPermissionsAsync();
+            setHasCameraPermission(cameraStatus.status === 'granted');
+            if (hasCameraPermission === false) {
+                alert("No Access to Camera");
+            }
+        })();
         setLoading(false)
         // if (currentAvatar != '') {
         //     const img = "data:image/jpeg;base64," + currentAvatar
@@ -118,8 +163,9 @@ export default function Signup ({ navigation }) {
     }
 
     const handleCamera = () => {
-        setViewMenu(false)
-        navigation.navigate('SignupCamera')
+        setViewMenu(viewMenu => !viewMenu)
+        setViewCamera(viewCamera=>!viewCamera)
+        setTempPic()
     }
 
     const handleX = async () => {
@@ -206,6 +252,143 @@ export default function Signup ({ navigation }) {
                         >
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
                     </Avatar>}
+                        <Overlay
+                            isVisible={viewCamera}
+                            onBackdropPress={() => handleCamera()}
+                            fullScreen={true}
+                            overlayStyle={styles.dialogContainer}
+                            >
+                            <View style={styles.backBtn}>
+                                <Button
+                                    title={""}
+                                    buttonStyle={{
+                                        backgroundColor: 'transparent',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                        paddingTop: 6,
+                                        height: 100,
+                                        width: 100,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        height: 100,
+                                        marginHorizontal: 10,
+                                        marginVertical: 10,
+                                        alignSelf: 'center'
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => handleCamera()}
+                                    icon={<Icon name="arrow-left" size={80} color="white" />}
+                                    iconRight
+                                    />
+                            </View>
+                            <View style={styles.cameraContainer}ref={imageRef} collapsable={false}>
+                                {tempPic ? 
+                                <Image source={{ uri: "data:image/jpeg;base64," + tempPic }} style={styles.tempImage} />
+                                :
+                                <Camera
+                                    ref={ref => setCamera(ref)}
+                                    style={styles.fixedRatio}
+                                    type={Camera.Constants.Type.front}
+                                    ratio={'1:1'} />}
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                {tempPic ? 
+                                <>
+                                    <Button
+                                        title={""}
+                                        buttonStyle={{
+                                            backgroundColor: 'transparent',
+                                            borderColor: 'transparent',
+                                            borderWidth: 0,
+                                            borderRadius: 30,
+                                            paddingTop: 6,
+                                            height: 100,
+                                            width: 100,
+                                        }}
+                                        containerStyle={{
+                                            width: 100,
+                                            height: 100,
+                                            marginHorizontal: 10,
+                                            marginVertical: 10,
+                                            alignSelf: 'center'
+                                        }}
+                                        titleStyle={{ fontWeight: 'bold' }}
+                                        onPress={() => onSaveImageAsync()}
+                                        icon={<Icon name="save" size={50} color="white" />}
+                                        iconRight
+                                        />
+                                    <Button
+                                        title={""}
+                                        buttonStyle={{
+                                            backgroundColor: 'transparent',
+                                            borderColor: 'transparent',
+                                            borderWidth: 0,
+                                            borderRadius: 30,
+                                            paddingTop: 6,
+                                            height: 100,
+                                            width: 100,
+                                        }}
+                                        containerStyle={{
+                                            width: 100,
+                                            height: 100,
+                                            marginHorizontal: 10,
+                                            marginVertical: 10,
+                                            alignSelf: 'center'
+                                        }}
+                                        titleStyle={{ fontWeight: 'bold' }}
+                                        onPress={() => sendImage()}
+                                        icon={<Icon name="person-add" size={50} color="white" />}
+                                        iconRight
+                                        />
+                                    <Button
+                                        title={""}
+                                        buttonStyle={{
+                                            backgroundColor: 'transparent',
+                                            borderColor: 'transparent',
+                                            borderWidth: 0,
+                                            borderRadius: 30,
+                                            paddingTop: 6,
+                                            height: 100,
+                                            width: 100
+                                        }}
+                                        containerStyle={{
+                                            width: 100,
+                                            height: 100,
+                                            marginHorizontal: 10,
+                                            marginVertical: 10,
+                                        }}
+                                        titleStyle={{ fontWeight: 'bold' }}
+                                        onPress={() => setTempPic()}
+                                        icon={<Icon name="flip-camera-ios" size={50} color="white" />}
+                                        />
+                                </>
+                                :
+                                 <Button
+                                    title={""}
+                                    buttonStyle={{
+                                        backgroundColor: 'transparent',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                        paddingTop: 6,
+                                        height: 100,
+                                        width: 100,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        height: 100,
+                                        marginHorizontal: 10,
+                                        marginVertical: 10,
+                                        alignSelf: 'center'
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => takePicture()}
+                                    icon={<Icon name="camera-alt" size={50} color="white" />}
+                                    />}
+                            </View>
+                        </Overlay>
                         <Dialog
                             isVisible={deleteView}
                             onBackdropPress={() => toggleDeleteView()}
@@ -539,6 +722,15 @@ const styles = StyleSheet.create({
         width: screenWidth
         // alignSelf:'stretch'
     },
+    dialogContainer: {
+        flex: 1,
+        flexGrow: 1,
+        backgroundColor: 'black', // '#25292e'
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: screenWidth
+        // alignSelf:'stretch'
+    },
     containerTop: {
         flex: 1,
         flexGrow: 1,
@@ -547,11 +739,14 @@ const styles = StyleSheet.create({
         justifyContent: 'top',
     },
     cameraContainer: {
-        height: 200,
-        width: 200,
+        height: 'auto',
+        width: screenWidth,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignSelf: 'center',
+        alignItems: 'center',
+        borderRadius: 1000,
+        overflow: 'hidden'
     },
     fixedRatio: {
         flex: 1,
@@ -575,6 +770,13 @@ const styles = StyleSheet.create({
         width: 200,
         alignSelf: 'center'
     },
+    tempImage: {
+        flex: 1,
+        aspectRatio: 1,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     imageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -586,6 +788,9 @@ const styles = StyleSheet.create({
         flex: 3 / 4,
     },
     buttonContainer: {
+        height: 'auto',
+        width: 'auto',
+        margin: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
