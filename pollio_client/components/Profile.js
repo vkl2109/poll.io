@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Avatar, Dialog } from '@rneui/themed';
@@ -6,6 +6,7 @@ const screenWidth = Dimensions.get('window').width;
 import * as SecureStore from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
 import { logout as userLogout } from '../redux/reducers/userReducer'
@@ -100,6 +101,12 @@ export default function Profile ({ navigation }) {
     useEffect(() => {
         getProfile()
     },[])
+
+    useFocusEffect(
+        useCallback(() => {
+            getProfile()
+        }, [])
+    );
 
     return (
         <SafeAreaView style={styles.container}>
