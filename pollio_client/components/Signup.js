@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef  } from 'react'
 import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
-import { Button, Dialog, Icon } from '@rneui/themed';
+import { Button, Dialog, Icon, Avatar } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as SecureStore from 'expo-secure-store';
 import { captureRef } from 'react-native-view-shot';
@@ -24,10 +24,13 @@ export default function Signup ({ navigation }) {
     const [ hasCameraPermission, setHasCameraPermission ] = useState(null);
     const [ camera, setCamera ] = useState(null);
     const [ base64Image, setBase64Image ] = useState('')
-    const [ avatar, setAvatar ] = useState()
+    const [ avatar, setAvatar ] = useState(null)
     const [ chooseAvatar, setChooseAvatar ] = useState(false)
     const [ library, setLibrary ] = useState(false)
     const [status, requestPermission] = MediaLibrary.usePermissions();
+    const [ viewMenu, setViewMenu ] = useState(false);
+    const [ deleteView, setDeleteView ] = useState(false);
+    const [ loading, setLoading ] = useState(true)
     const imageRef = useRef();
     const dispatch = useDispatch();
 
@@ -45,7 +48,7 @@ export default function Signup ({ navigation }) {
     }, []);
 
     const login = async () => {
-        let req = await fetch("http://192.168.1.210:5000/login", {
+        let req = await fetch("http://10.129.2.90:5000/login", {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -68,7 +71,7 @@ export default function Signup ({ navigation }) {
 
     const handleSignUp = () => {
         const signup = async () => {
-            let req = await fetch("http://192.168.1.210:5000/signup", {
+            let req = await fetch("http://10.129.2.90:5000/signup", {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -100,20 +103,27 @@ export default function Signup ({ navigation }) {
         // navigation.navigate('Main') // temporary
     }
 
+    const handleCamera = () => {
+        setViewMenu(false)
+        navigation.navigate('SignupCamera')
+    }
+
+    const handleX = async () => {
+        setLoading(false)
+        setAvatar(null)
+        setLoading(true)
+        setViewMenu(false)
+        setDeleteView(false)
+    }
+
+    const toggleDeleteView = () => {
+        setViewMenu(viewMenu => !viewMenu)
+        setDeleteView(deleteView => !deleteView)
+    }
+
     const toggleErrorDialog = () => {
         setErrorDialog(false)
         setErrorMsg('')
-    }
-
-    const takePicture = async () => {
-        if (camera) {
-            const data = await camera.takePictureAsync(null)
-            const base64 = await FileSystem.readAsStringAsync(data.uri, { encoding: 'base64' });
-            setBase64Image(base64)
-            const img = "data:image/jpeg;base64," + base64
-            setAvatar(img);
-            // console.log(base64)
-        }
     }
 
     const pickImage = async () => {
@@ -131,41 +141,122 @@ export default function Signup ({ navigation }) {
             setAvatar(img);
             setChooseAvatar(true)
             setLibrary(true)
+            setViewMenu(false)
         }
     };
-
-    const onSaveImageAsync = async () => {
-        try {
-            const localUri = await captureRef(imageRef, {
-                height: 440,
-                quality: 1
-            });
-
-            await MediaLibrary.saveToLibraryAsync(localUri);
-            if (localUri) {
-                alert("Saved!");
-            }
-        } catch (e) {
-            alert(e);
-        }
-    };
-
-    const toggleCamera = () => {
-        setChooseAvatar(true)
-        setLibrary(false)
-    }
-
-    const toggleClose = () => {
-        setChooseAvatar(false)
-        setBase64Image('')
-        setAvatar()
-    }
 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 <View style={styles.container}>
+                    {loading && <Avatar
+                        size={150}
+                        rounded
+                        title={''}
+                        icon={{ name: 'user', type: 'font-awesome' }}
+                        source={avatar && {uri : avatar }}
+                        containerStyle={{ backgroundColor: '#228b22', margin: 10, textAlign: 'center' }}
+                        >
+                        <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
+                    </Avatar>}
+                        <Dialog
+                            isVisible={deleteView}
+                            onBackdropPress={() => toggleDeleteView()}
+                            >
+                            <Dialog.Title style={styles.dialogTitle} title={"Delete Avatar?"} />
+                            <View style={styles.buttonContainer}> 
+                                <Button
+                                    title={"Yes"}
+                                    buttonStyle={{
+                                        backgroundColor: 'green',
+                                        borderWidth: 0,
+                                        borderColor: 'white',
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginHorizontal: 5,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => handleX()}
+                                    />
+                                <Button
+                                    title={"No"}
+                                    buttonStyle={{
+                                        backgroundColor: 'red',
+                                        borderWidth: 0,
+                                        borderColor: 'white',
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginHorizontal: 5,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => toggleDeleteView()}
+                                    />
+                            </View> 
+                        </Dialog>
+                        <Dialog
+                            isVisible={viewMenu}
+                            onBackdropPress={() => setViewMenu(false)}
+                            >
+                            <Dialog.Title style={styles.dialogTitle} title={"Choose Avatar?"} />
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    title={"Library"}
+                                    buttonStyle={{
+                                        backgroundColor: '#369F8E',
+                                        borderWidth: 0,
+                                        borderColor: 'white',
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginHorizontal: 5,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => pickImage()}
+                                    />
+                                <Button
+                                    title={"X"}
+                                    buttonStyle={{
+                                        backgroundColor: 'red',
+                                        borderWidth: 0,
+                                        borderColor: 'white',
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        height: 40,
+                                        width: 40,
+                                        marginHorizontal: 5,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => toggleDeleteView()}
+                                    />
+                                <Button
+                                    title={"Camera"}
+                                    buttonStyle={{
+                                        backgroundColor: '#369F8E',
+                                        borderWidth: 0,
+                                        borderColor: 'white',
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: 100,
+                                        marginHorizontal: 5,
+                                        marginVertical: 10,
+                                    }}
+                                    titleStyle={{ fontWeight: 'bold' }}
+                                    onPress={() => handleCamera()}
+                                    />
+                            </View>
+                        </Dialog>
                         <Dialog
                             isVisible={errorDialog}
                             onBackdropPress={toggleErrorDialog}
@@ -198,7 +289,7 @@ export default function Signup ({ navigation }) {
                             secureTextEntry={hide2}
                             right={<TextInput.Icon icon="eye" onPress={() => setHide2(hide2 => !hide2)} style={{ justifyContent: 'center'}}/>}
                             />
-                        {chooseAvatar && 
+                        {/* {chooseAvatar && 
                         <>
                             {avatar ? 
                             <View style={styles.avatarContainer}>
@@ -367,7 +458,7 @@ export default function Signup ({ navigation }) {
                                 onPress={() => pickImage()}
                                 icon={<Icon name="photo" size={20} color="white" />}
                                 />
-                        </View>}
+                        </View>} */}
                         <Button
                             title={"SIGN UP"}
                             buttonStyle={{
@@ -470,5 +561,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: -2, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 3,
+    },
+    dialogTitle: {
+        textAlign: 'center',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 })

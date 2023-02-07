@@ -83,6 +83,7 @@ export default function Profile ({ navigation }) {
             await updateUser(base64)
             const img = "data:image/jpeg;base64," + base64
             setAvatarImg(img)
+            setViewMenu(false)
         }
     };
 
@@ -193,6 +194,7 @@ export default function Profile ({ navigation }) {
                                     borderRadius: 30,
                                 }}
                                 containerStyle={{
+                                    height: 40,
                                     width: 40,
                                     marginHorizontal: 5,
                                     marginVertical: 10,

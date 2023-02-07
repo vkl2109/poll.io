@@ -9,6 +9,7 @@ import { store } from './redux/store'
 
 import Login from './components/Login';
 import Signup from './components/Signup';
+import SignupCamera from './components/SignupCamera';
 import Main from './components/Main';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ export default function App() {
             <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
               <Stack.Screen name='Login' component={Login} />
               <Stack.Screen name='Signup' component={Signup} />
+              <Stack.Screen name='SignupCamera' component={SignupCamera} />
               <Stack.Screen name='Main' component={Main} />
             </Stack.Navigator>
           </NavigationContainer>
