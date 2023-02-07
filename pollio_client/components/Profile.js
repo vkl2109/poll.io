@@ -152,6 +152,7 @@ export default function Profile ({ navigation }) {
         setLoading(true)
         setAvatarImg(null)
         await updateUser('')
+        setDeleteView(false)
         setLoading(false)
     }
 

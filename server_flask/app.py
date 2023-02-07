@@ -33,7 +33,6 @@ def patch_user():
         print (data)
         if 'avatarBase64' in data:
             user.avatarBase64 = data['avatarBase64']
-            print(data['avatarBase64'])
         elif 'username' in data:
             user.username = data['username']
             print(data['username'])
