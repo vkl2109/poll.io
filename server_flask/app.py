@@ -30,7 +30,16 @@ def patch_user():
         return jsonify({'error': 'No account found'}), 404
     else: 
         data = request.json
-        user.avatarBase64 = data['avatarBase64']
+        print (data)
+        if 'avatarBase64' in data:
+            user.avatarBase64 = data['avatarBase64']
+            print(data['avatarBase64'])
+        elif 'username' in data:
+            user.username = data['username']
+            print(data['username'])
+        elif 'password' in data:
+            user.password = data['password']
+            print(data['password'])
         db.session.commit()
         return jsonify(user.toJSON()), 202
     

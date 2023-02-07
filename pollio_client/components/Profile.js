@@ -2,10 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Avatar, Dialog } from '@rneui/themed';
+import { TextInput } from 'react-native-paper';
 const screenWidth = Dimensions.get('window').width; 
 import * as SecureStore from 'expo-secure-store';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
@@ -14,10 +16,15 @@ import { logout as userLogout } from '../redux/reducers/userReducer'
 export default function Profile ({ navigation }) {
     const [ profile, setProfile ] = useState()
     const [ loading, setLoading ] = useState(true)
+    const [ hide, setHide ] = useState(true)
+    const [ newUsername, setNewUsername ] = useState('')
+    const [ newPassword, setNewPassword ] = useState('')
     const [ avatarImg, setAvatarImg ] = useState(null)
     const [ refreshing, setRefreshing ] = useState(false);
     const [ viewMenu, setViewMenu ] = useState(false);
     const [ deleteView, setDeleteView ] = useState(false);
+    const [ errorMsg, setErrorMsg ] = useState('')
+    const [ errorDialog, setErrorDialog ] = useState(false)
     const dispatch = useDispatch();
 
     const getProfile = async () => {
@@ -65,6 +72,60 @@ export default function Profile ({ navigation }) {
         }
     }
 
+    const changeUsername = async () => {
+        if (newUsername == '') {
+            setErrorMsg("Username can't be blank!")
+            setErrorDialog(true)
+            return
+        }
+        let req = await fetch('http://10.129.2.90:5000/profile', {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                username: newUsername,
+            })
+        })
+        if (req.ok) {
+            setNewUsername('')
+            getProfile()
+        }
+        else {
+            let res = await req.json()
+            setErrorMsg(res.error)
+            setErrorDialog(true)
+        }
+    }
+
+    const changePassword = async () => {
+        if (newPassword == '') {
+            setErrorMsg("Password can't be blank!")
+            setErrorDialog(true)
+            return
+        }
+        let req = await fetch('http://10.129.2.90:5000/profile', {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                password: newPassword,
+            })
+        })
+        if (req.ok) {
+            setNewPassword('')
+            getProfile()
+        }
+        else {
+            let res = await req.json()
+            setErrorMsg(res.error)
+            setErrorDialog(true)
+        }
+    }
+
     const handleCamera = () => {
         setViewMenu(false)
         navigation.navigate('ProfileCamera')
@@ -105,6 +166,11 @@ export default function Profile ({ navigation }) {
         navigation.navigate('Login')
     }
 
+    const toggleErrorDialog = () => {
+        setErrorDialog(false)
+        setErrorMsg('')
+    }
+
     useEffect(() => {
         getProfile()
     },[])
@@ -117,12 +183,20 @@ export default function Profile ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={() => getProfile()} />
                 }>
+                <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 {loading ? <ActivityIndicator size="large" /> :
                 <View style={styles.feed}>
+                    <Dialog
+                        isVisible={errorDialog}
+                        onBackdropPress={toggleErrorDialog}
+                        >
+                        <Dialog.Title style={styles.dialogTitle} title={"Error"} />
+                        <Text style={styles.dialogText}>{errorMsg}</Text>
+                    </Dialog>
                     <Dialog
                         isVisible={deleteView}
                         onBackdropPress={() => toggleDeleteView()}
@@ -229,7 +303,24 @@ export default function Profile ({ navigation }) {
                         >
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
                     </Avatar>
-                    <Text>{profile.username}</Text>
+                    <Text style={styles.username}>Hello, {profile.username}</Text>
+                    <TextInput
+                        mode="outlined"
+                        label="new username"
+                        value={newUsername}
+                        onChangeText={newUsername => setNewUsername(newUsername)}
+                        style={styles.textInput}
+                        right={<TextInput.Icon icon="autorenew" onPress={() => changeUsername()} containerStyle={{ justifyContent: 'center'}}/>}
+                        />
+                    <TextInput
+                        mode="outlined"
+                        label="new password"
+                        value={newPassword}
+                        onChangeText={newPassword => setNewPassword(newPassword)}
+                        style={styles.textInput}
+                        secureTextEntry={true}
+                        right={<TextInput.Icon icon="autorenew" onPress={() => changePassword()} containerStyle={{ justifyContent: 'center'}}/>}
+                        />
                     <Button
                         title={"LOG OUT"}
                         buttonStyle={{
@@ -247,6 +338,7 @@ export default function Profile ({ navigation }) {
                         onPress={() => handleLogout()}
                         />
                 </View>}
+                </KeyboardAwareScrollView>
             </ScrollView>
         </SafeAreaView>
     )
@@ -260,12 +352,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    username: {
+        fontSize: 30,
+        margin: 20
+    },
     feed: {
         flex: 1,
         flexGrow: 1,
         backgroundColor: '#ADD8E6', // '#25292e'
         alignItems: 'center',
-        justifyContent: 'top',
+        justifyContent: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -277,5 +373,19 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    textInput: {
+        height: 40,
+        width: 250,
+        margin: 12,
+        borderWidth: 0,
+        padding: 10,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        elevation: 20,
+        shadowColor: '#52006A',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
 });
