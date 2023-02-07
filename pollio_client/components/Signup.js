@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react'
-import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
 import { Button, Dialog, Icon, Avatar } from '@rneui/themed';
@@ -13,6 +13,8 @@ import { Camera } from 'expo-camera';
 import { useDispatch } from 'react-redux';
 import { login as userLogin } from '../redux/reducers/userReducer'
 
+const screenWidth = Dimensions.get('window').width; 
+
 export default function Signup ({ navigation }) {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
@@ -21,31 +23,19 @@ export default function Signup ({ navigation }) {
     const [ hide2, setHide2 ] = useState(true)
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
-    const [ hasCameraPermission, setHasCameraPermission ] = useState(null);
-    const [ camera, setCamera ] = useState(null);
     const [ base64Image, setBase64Image ] = useState('')
     const [ avatar, setAvatar ] = useState(null)
-    const [ chooseAvatar, setChooseAvatar ] = useState(false)
-    const [ library, setLibrary ] = useState(false)
-    const [status, requestPermission] = MediaLibrary.usePermissions();
+    const [ status, requestPermission ] = MediaLibrary.usePermissions();
     const [ viewMenu, setViewMenu ] = useState(false);
     const [ deleteView, setDeleteView ] = useState(false);
     const [ loading, setLoading ] = useState(true)
-    const imageRef = useRef();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        (async () => {
-            const cameraStatus = await Camera.requestCameraPermissionsAsync();
-            setHasCameraPermission(cameraStatus.status === 'granted');
-            if (hasCameraPermission === false) {
-                alert("No Access to Camera");
-            }
-        })();
         if (status === null) {
             requestPermission();
         }
-    }, []);
+    }, [loading]);
 
     const login = async () => {
         let req = await fetch("http://10.129.2.90:5000/login", {
@@ -139,7 +129,6 @@ export default function Signup ({ navigation }) {
             setBase64Image(base64)
             const img = "data:image/jpeg;base64," + base64
             setAvatar(img);
-            setChooseAvatar(true)
             setLibrary(true)
             setViewMenu(false)
         }
@@ -147,8 +136,32 @@ export default function Signup ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
+                <KeyboardAwareScrollView contentContainerStyle={styles.containerTop}>
+                <View style={styles.backBtn}>
+                    <Button
+                        title={""}
+                        buttonStyle={{
+                            backgroundColor: 'transparent',
+                            borderColor: 'transparent',
+                            borderWidth: 0,
+                            borderRadius: 30,
+                            paddingTop: 6,
+                            height: 100,
+                            width: 100,
+                        }}
+                        containerStyle={{
+                            width: 100,
+                            height: 100,
+                            marginHorizontal: 10,
+                            alignSelf: 'center'
+                        }}
+                        titleStyle={{ fontWeight: 'bold' }}
+                        onPress={() => navigation.navigate('Login')}
+                        icon={<Icon name="arrow-left" size={80} color="white" />}
+                        iconRight
+                        />
+                </View>
                 <View style={styles.container}>
                     {loading && <Avatar
                         size={150}
@@ -466,31 +479,15 @@ export default function Signup ({ navigation }) {
                                 borderWidth: 0,
                                 borderColor: 'white',
                                 borderRadius: 30,
+                                height: 60,
                             }}
                             containerStyle={{
                                 width: 200,
                                 marginHorizontal: 50,
-                                marginVertical: 10,
+                                marginVertical: 30,
                             }}
-                            titleStyle={{ fontWeight: 'bold' }}
+                            titleStyle={{ fontWeight: 'bold', fontSize: 22 }}
                             onPress={() => handleSignUp()}
-                            />
-                        <Button
-                            title={"back to login"}
-                            buttonStyle={{
-                                backgroundColor: '#FFA500',
-                                borderColor: 'transparent',
-                                borderWidth: 0,
-                                borderRadius: 30,
-                            }}
-                            containerStyle={{
-                                width: 150,
-                                height: 50,
-                                marginHorizontal: 50,
-                                marginVertical: 10,
-                            }}
-                            titleStyle={{ fontWeight: 'bold' }}
-                            onPress={() => navigation.navigate('Login')}
                             />
                 </View>
                 </KeyboardAwareScrollView>
@@ -505,8 +502,16 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: '#ADD8E6', // '#25292e'
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'top',
+        width: screenWidth
         // alignSelf:'stretch'
+    },
+    containerTop: {
+        flex: 1,
+        flexGrow: 1,
+        backgroundColor: '#ADD8E6', // '#25292e'
+        alignItems: 'center',
+        justifyContent: 'top',
     },
     cameraContainer: {
         height: 200,
@@ -527,6 +532,10 @@ const styles = StyleSheet.create({
     avatarContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    backBtn: {
+        alignSelf: 'left',
+        margin: 0,
     },
     image: {
         height: 200,
