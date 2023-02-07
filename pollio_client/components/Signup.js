@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef  } from 'react'
+import React, { useState, useEffect, useCallback  } from 'react'
 import { StyleSheet, ScrollView, View, Text, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
 import { Button, Dialog, Icon, Avatar } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import * as SecureStore from 'expo-secure-store';
-import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
-import { Camera } from 'expo-camera';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import { login as userLogin } from '../redux/reducers/userReducer'
+import { uploadAvatar, deleteAvatar } from '../redux/reducers/avatarReducer'
 
 const screenWidth = Dimensions.get('window').width; 
 
@@ -24,18 +24,42 @@ export default function Signup ({ navigation }) {
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
     const [ base64Image, setBase64Image ] = useState('')
-    const [ avatar, setAvatar ] = useState(null)
+    const [ avatarImg, setAvatarImg ] = useState(null)
     const [ status, requestPermission ] = MediaLibrary.usePermissions();
     const [ viewMenu, setViewMenu ] = useState(false);
     const [ deleteView, setDeleteView ] = useState(false);
     const [ loading, setLoading ] = useState(true)
     const dispatch = useDispatch();
+    const currentAvatar = useSelector((state) => state.avatar)
 
     useEffect(() => {
+        setLoading(false)
+        if (currentAvatar != '') {
+            const img = "data:image/jpeg;base64," + currentAvatar
+            setAvatarImg(img);
+        }
+        else {
+            setAvatarImg(null)
+        }
         if (status === null) {
             requestPermission();
         }
-    }, [loading]);
+        setLoading(true)
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(false)
+            if (currentAvatar != '') {
+                const img = "data:image/jpeg;base64," + currentAvatar
+                setAvatarImg(img);
+            }
+            else {
+                setAvatarImg(null)
+            }
+            setLoading(true)
+        }, [])
+    );
 
     const login = async () => {
         let req = await fetch("http://10.129.2.90:5000/login", {
@@ -100,7 +124,8 @@ export default function Signup ({ navigation }) {
 
     const handleX = async () => {
         setLoading(false)
-        setAvatar(null)
+        setAvatarImg(null)
+        setBase64Image('')
         setLoading(true)
         setViewMenu(false)
         setDeleteView(false)
@@ -128,8 +153,7 @@ export default function Signup ({ navigation }) {
             const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, { encoding: 'base64' });
             setBase64Image(base64)
             const img = "data:image/jpeg;base64," + base64
-            setAvatar(img);
-            setLibrary(true)
+            setAvatarImg(img);
             setViewMenu(false)
         }
     };
@@ -163,16 +187,15 @@ export default function Signup ({ navigation }) {
                         />
                 </View>
                 <View style={styles.container}>
-                    {loading && <Avatar
+                    <Avatar
                         size={150}
                         rounded
-                        title={''}
                         icon={{ name: 'user', type: 'font-awesome' }}
-                        source={avatar && {uri : avatar }}
-                        containerStyle={{ backgroundColor: '#228b22', margin: 10, textAlign: 'center' }}
+                        source={avatarImg && {uri : avatarImg}}                       
+                        containerStyle={{backgroundColor: '#228b22'}}
                         >
                         <Avatar.Accessory size={40} onPress={() => setViewMenu(true)}/>
-                    </Avatar>}
+                    </Avatar>
                         <Dialog
                             isVisible={deleteView}
                             onBackdropPress={() => toggleDeleteView()}

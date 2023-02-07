@@ -5,32 +5,25 @@ import { Button, Dialog, Icon } from '@rneui/themed';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
+import { useDispatch } from 'react-redux';
+import { uploadAvatar } from '../redux/reducers/avatarReducer'
 
 const screenWidth = Dimensions.get('window').width; 
 
 export default function SignupCamera({ navigation }) {
     const [ hasCameraPermission, setHasCameraPermission ] = useState(null);
     const [ camera, setCamera ] = useState(null);
-    const [status, requestPermission] = MediaLibrary.usePermissions();
+    const [ status, requestPermission ] = MediaLibrary.usePermissions();
     const [ base64Image, setBase64Image ] = useState('')
     const [ avatar, setAvatar ] = useState()
     const imageRef = useRef();
+    const dispatch = useDispatch();
 
-    const sendImage = async (base64) => {
-        let req = await fetch('http://10.129.2.90:5000/profile', {
-            method: "PATCH",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
-            },
-            body: JSON.stringify({
-                avatarBase64: base64Image,
-            })
-        })
-        if (req.ok) {
-            navigation.navigate('ProfileMain')
-        }
+    const sendImage = () => {
+        dispatch(uploadAvatar(base64Image))
+        navigation.navigate('Signup')
     }
+
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync(null)
@@ -93,7 +86,7 @@ export default function SignupCamera({ navigation }) {
                         alignSelf: 'center'
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
-                    onPress={() => navigation.navigate('Signup')}
+                    onPress={() => navigation.navigate('Signup', { base64route: '' })}
                     icon={<Icon name="arrow-left" size={80} color="white" />}
                     iconRight
                     />
