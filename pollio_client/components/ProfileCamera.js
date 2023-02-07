@@ -8,7 +8,7 @@ import * as FileSystem from 'expo-file-system';
 
 const screenWidth = Dimensions.get('window').width; 
 
-export default function ProfileCamera() {
+export default function ProfileCamera({ navigation }) {
     const [ hasCameraPermission, setHasCameraPermission ] = useState(null);
     const [ camera, setCamera ] = useState(null);
     const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -16,6 +16,21 @@ export default function ProfileCamera() {
     const [ avatar, setAvatar ] = useState()
     const imageRef = useRef();
 
+    const sendImage = async (base64) => {
+        let req = await fetch('http://10.129.2.90:5000/profile', {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                avatarBase64: base64Image,
+            })
+        })
+        if (req.ok) {
+            navigation.navigate('ProfileMain')
+        }
+    }
     const takePicture = async () => {
         if (camera) {
             const data = await camera.takePictureAsync(null)
@@ -23,7 +38,7 @@ export default function ProfileCamera() {
             setBase64Image(base64)
             const img = "data:image/jpeg;base64," + base64
             setAvatar(img);
-            console.log(base64)
+            // console.log(base64)
         }
     }
 
@@ -58,6 +73,31 @@ export default function ProfileCamera() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.backBtn}>
+                <Button
+                    title={""}
+                    buttonStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 30,
+                        paddingTop: 6,
+                        height: 100,
+                        width: 100,
+                    }}
+                    containerStyle={{
+                        width: 100,
+                        height: 100,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    titleStyle={{ fontWeight: 'bold' }}
+                    onPress={() => navigation.navigate('ProfileMain')}
+                    icon={<Icon name="arrow-left" size={80} color="white" />}
+                    iconRight
+                    />
+            </View>
             <View style={styles.cameraContainer}ref={imageRef} collapsable={false}>
                 {avatar ? 
                 <Image source={{ uri: avatar }} style={styles.image} />
@@ -79,13 +119,14 @@ export default function ProfileCamera() {
                         borderRadius: 30,
                         paddingTop: 6,
                         height: 100,
-                        width: 100
+                        width: 100,
                     }}
                     containerStyle={{
                         width: 100,
                         height: 100,
-                        marginHorizontal: 30,
+                        marginHorizontal: 10,
                         marginVertical: 10,
+                        alignSelf: 'center'
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
                     onPress={() => takePicture()}
@@ -102,17 +143,41 @@ export default function ProfileCamera() {
                         borderRadius: 30,
                         paddingTop: 6,
                         height: 100,
-                        width: 100
+                        width: 100,
                     }}
                     containerStyle={{
                         width: 100,
                         height: 100,
-                        marginHorizontal: 30,
+                        marginHorizontal: 10,
                         marginVertical: 10,
+                        alignSelf: 'center'
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
                     onPress={() => onSaveImageAsync()}
                     icon={<Icon name="save" size={50} color="white" />}
+                    iconRight
+                    />
+                <Button
+                    title={""}
+                    buttonStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 30,
+                        paddingTop: 6,
+                        height: 100,
+                        width: 100,
+                    }}
+                    containerStyle={{
+                        width: 100,
+                        height: 100,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    titleStyle={{ fontWeight: 'bold' }}
+                    onPress={() => sendImage()}
+                    icon={<Icon name="person-add" size={50} color="white" />}
                     iconRight
                     />
                 <Button
@@ -129,12 +194,12 @@ export default function ProfileCamera() {
                     containerStyle={{
                         width: 100,
                         height: 100,
-                        marginHorizontal: 30,
+                        marginHorizontal: 10,
                         marginVertical: 10,
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
                     onPress={() => setAvatar()}
-                    icon={<Icon name="camera-alt" size={50} color="white" />}
+                    icon={<Icon name="flip-camera-ios" size={50} color="white" />}
                     />
                 </>}
             </View>
@@ -155,16 +220,23 @@ const styles = StyleSheet.create({
         width: screenWidth,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderRadius: 1000,
+        overflow: 'hidden'
+    },
+    backBtn: {
+        alignSelf: 'left'
     },
     image: {
-        height: 'auto',
-        width: screenWidth,
-        alignSelf: 'center'
+        flex: 1,
+        aspectRatio: 1,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     fixedRatio: {
         flex: 1,
-        aspectRatio: 1
+        aspectRatio: 1,
     },
     buttonContainer: {
         flexDirection: 'row',
