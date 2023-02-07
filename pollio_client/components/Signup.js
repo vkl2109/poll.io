@@ -49,6 +49,7 @@ export default function Signup ({ navigation }) {
 
     const sendImage = () => {
         const img = "data:image/jpeg;base64," + tempPic
+        setBase64Image(tempPic)
         setAvatarImg(img);
         setViewCamera(false)
         setViewMenu(false)
