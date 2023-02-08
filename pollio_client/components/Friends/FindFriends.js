@@ -8,13 +8,12 @@ const screenWidth = Dimensions.get('window').width;
 
 export default function FindFriends ({ navigation }) {
     const [ allUsers, setAllUsers ] = useState([])
-    const [ yourRequests, setYourRequests ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
     const [ refreshing, setRefreshing ] = useState(false);
 
-    const getAllFriends = async () => {
+    const getAllUsers = async () => {
         setRefreshing(true)
-        // let req = await fetch('http://10.129.2.90:5000/yourfriends', {
+        // let req = await fetch('http://10.129.2.90:5000/allfriends', {
         //     method: 'POST',
         //     headers: {
         //         'Content-Type': 'application/json',
@@ -23,20 +22,19 @@ export default function FindFriends ({ navigation }) {
         // })
         // if (req.ok) {
         //     let res = await req.json()
-        //     setAllUsers(res.users)
-        //     setYourRequests(res.friendrequests)
+        //     setAllUsers(res)
         //     setIsLoading(false)
         // }
         setRefreshing(false)
     }
 
     useEffect(()=>{
-        getAllFriends()
+        getAllUsers()
     },[])
 
     useFocusEffect(
         useCallback(() => {
-            getAllFriends()
+            getAllUsers()
         }, [])
     );
 
@@ -44,7 +42,7 @@ export default function FindFriends ({ navigation }) {
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}
             refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={getAllFriends} />
+                    <RefreshControl refreshing={refreshing} onRefresh={getAllUsers} />
                 }>
                 <View style={{alignSelf: 'left', margin: 0}}>
                     <Button
