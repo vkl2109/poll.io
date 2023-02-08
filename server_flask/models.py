@@ -17,6 +17,8 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     polls = db.relationship('Poll', backref='user', cascade='all, delete-orphan', lazy=True)
     responses = db.relationship('Response', backref='user', cascade='all, delete-orphan', lazy=True)
+    friendrequests = db.relationship(
+        'FriendRequest', backref='user', cascade='all, delete-orphan', lazy=True)
 
     def toJSON(self):
         return {"id": self.id, "username": self.username, "password": self.password, "avatarBase64": self.avatarBase64}
@@ -87,3 +89,26 @@ class Response(db.Model):
 
     def __repr__(self):
         return '<Response %r>' % self.response
+    
+class FriendRequest(db.Model):
+    # __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    recipient = db.Column(db.String(80), nullable=False)
+    user1_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user2_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    accepted = db.Column(db.Boolean(), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    def toJSON(self):
+        return {"id": self.id, "recipient": self.recipient, "user1_id": self.user1_id, "user2_id": self.user2_id, "accepted": self.accepted}
+
+    def __init__(self, recipient, user1_id, user2_id, accepted=False):
+        self.recipient = recipient
+        self.user1_id = user1_id
+        self.user2_id = user2_id
+        self.accepted = accepted
+
+    def __repr__(self):
+        return '<FriendRequest %r>' % self.recipient
