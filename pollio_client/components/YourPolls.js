@@ -51,6 +51,7 @@ export default function YourPolls ({ navigation }) {
                     <Text style={styles.createText}>Create a Poll!</Text>
                 </TouchableOpacity>
                 {isLoading ? <ActivityIndicator size="large" /> :
+                <>{yourPolls.length == 0 ? <Text style={styles.nopolls}>No Polls Yet!</Text> :
                 (yourPolls.map((poll, i) => {
                     return(
                         <View key={i} style={styles.wrapper}>
@@ -65,6 +66,7 @@ export default function YourPolls ({ navigation }) {
                         </View>
                     )}   
                 ))}
+                </>}
             </ScrollView>
         </SafeAreaView>
     )
@@ -91,6 +93,10 @@ const styles = StyleSheet.create({
   },
   createText: {
     fontSize: 25
+  },
+  nopolls: {
+    fontSize: 25,
+    margin: 10,
   },
   wrapper: {
     width: '100%',
