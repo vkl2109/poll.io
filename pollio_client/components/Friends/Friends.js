@@ -7,52 +7,80 @@ const screenWidth = Dimensions.get('window').width;
 
 export default function Friends ({ navigation }) {
     const [ yourFriends, setYourFriends ] = useState([])
+    const [ yourRequests, setYourRequests ] = useState([])
+    const [ receivedRequests, setReceivedRequests ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
     const [ refreshing, setRefreshing ] = useState(false);
 
     const getYourFriends = async () => {
         setRefreshing(true)
-        // let req = await fetch('http://10.129.2.90:5000/yourfriends', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
-        //     }
-        // })
-        // if (req.ok) {
-        //     let res = await req.json()
-        //     setYourFriends(res)
-        //     setIsLoading(false)
-        // }
+        let req = await fetch('http://10.129.2.90:5000/yourfriends', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
+        if (req.ok) {
+            let res = await req.json()
+            setYourFriends(res.friends)
+            setYourRequests(res.friendrequests)
+            setReceivedRequests(res.receivedrequests)
+            setIsLoading(false)
+        }
         setRefreshing(false)
     }
 
     useEffect(()=>{
-        // getYourFriends()
+        getYourFriends()
     },[])
 
     useFocusEffect(
         useCallback(() => {
-            // getYourFriends()
+            getYourFriends()
         }, [])
     );
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getYourFriends} />
                 }>
+                <Text style={styles.listTitle}>Your Friends:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
                 <>{yourFriends.length == 0 ? <Text style={styles.nopolls}>No Friends Yet!</Text> :
                 (yourFriends.map(friend => {
                     return(
                         <View>
-
+                            {friend.username}
                         </View>
                     )
                 })
-
+                )}
+                </>}
+                <Text style={styles.listTitle}>Sent Requests:</Text>
+                {isLoading ? <ActivityIndicator size="large" /> : 
+                <>{yourRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Sent!</Text> :
+                (yourRequests.map(request => {
+                    return(
+                        <View>
+                            {request.recipient}
+                        </View>
+                    )
+                })
+                )}
+                </>}
+                <Text style={styles.listTitle}>Pending Requests:</Text>
+                {isLoading ? <ActivityIndicator size="large" /> : 
+                <>{receivedRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Received!</Text> :
+                (receivedRequests.map(received => {
+                    return(
+                        <View>
+                            {received.recipient}
+                        </View>
+                    )
+                })
                 )}
                 </>}
             </ScrollView>
@@ -72,4 +100,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     margin: 10,
   },
+  listTitle: {
+    fontWeight: 'bold', 
+    fontSize: 30, 
+    alignSelf: 'left', 
+    margin: 20
+  }
 });

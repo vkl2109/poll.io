@@ -3,7 +3,7 @@ from flask import Flask, send_file, request, jsonify
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, User, Poll, Response
+from models import db, User, Poll, Response, FriendRequest
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_socketio import SocketIO, send, emit
 from datetime import datetime
@@ -21,8 +21,7 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 def home():
     return send_file('welcome.html')
 
-
-@app.post('/friends')
+@app.post('/yourfriends')
 @jwt_required()
 def get_friends():
     current_user = get_jwt_identity()
@@ -30,7 +29,8 @@ def get_friends():
     if not user:
         return jsonify({'error': 'No account found'}), 404
     else:
-        return jsonify(user.all_friends()), 200
+        receivedRequests = FriendRequest.query.filter_by(recipient=user.username)
+        return jsonify({'friends': [friend.toJSON() for friend in user.friends], 'friendrequests': [request.toJSON() for request in user.friendrequests if request.accepted == False], 'receivedrequests': [received.toJSON() for received in receivedRequests if received.accepted == False]}), 200
 
 @app.patch('/profile')
 @jwt_required()

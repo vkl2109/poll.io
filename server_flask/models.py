@@ -6,7 +6,7 @@ from datetime import datetime
 db = SQLAlchemy()
 migrate = Migrate(db)
 
-friends = db.Table('friends',
+friendships = db.Table('friendships',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('friend_id', db.Integer, db.ForeignKey('user.id'))
 )
@@ -23,10 +23,10 @@ class User(db.Model):
     friendrequests = db.relationship(
         'FriendRequest', backref='user', cascade='all, delete-orphan', lazy=True)
     friends = db.relationship(
-        'User', secondary=friends,
-        primaryjoin=(friends.c.user_id == id),
-        secondaryjoin=(friends.c.friend_id == id),
-        backref=db.backref('friends', lazy='dynamic'), lazy='dynamic')
+        'User', secondary=friendships,
+        primaryjoin=(friendships.c.user_id == id),
+        secondaryjoin=(friendships.c.friend_id == id),
+        backref=db.backref('friendships', lazy='dynamic'), lazy='dynamic')
 
     def befriend(self, friend):
         if friend not in self.friends:
