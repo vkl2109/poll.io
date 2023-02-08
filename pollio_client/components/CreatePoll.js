@@ -21,6 +21,15 @@ export default function CreatePoll ({ navigation }) {
     }
 
     const postPoll = async () => {
+        let newQuestion = question
+        if (newQuestion[newQuestion.length - 1] != '?') {
+            if (newQuestion[newQuestion.length - 1] == '!' || newQuestion[newQuestion.length - 1] == '.') {
+                newQuestion = newQuestion.slice(0, -1) + '?'
+            }
+            else {
+                newQuestion = newQuestion.slice() + "?"
+            }
+        }
         let req = await fetch('http://10.129.2.90:5000/createpoll', {
             method: 'POST',
             headers: {
@@ -28,7 +37,7 @@ export default function CreatePoll ({ navigation }) {
                 'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
             }, 
             body: JSON.stringify({
-                "question" : question,
+                "question" : newQuestion,
                 "option1" : option1,
                 "option2" : option2
             })
@@ -46,17 +55,17 @@ export default function CreatePoll ({ navigation }) {
     }
 
     const handleCreatePoll = () => {
-        if (question.length > 30) {
+        if (question.length > 30 || question.length == 0) {
             setErrorDialog(true)
-            setErrorMsg('Question too long!!')
+            setErrorMsg('Invalid Question!')
         }
-        else if (option1.length > 10) {
+        else if (option1.length > 10|| option1.length == 0) {
             setErrorDialog(true)
-            setErrorMsg('Option 1 too long!!')
+            setErrorMsg('Invalid Option 1!')
         }
-        else if (option2.length > 10) {
+        else if (option2.length > 10 || option2.length == 0) {
             setErrorDialog(true)
-            setErrorMsg('Option 2 too long!!')
+            setErrorMsg('Invalid Option 2!')
         }
         else {
             postPoll()
