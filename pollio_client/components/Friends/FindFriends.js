@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { Button, Dialog, Icon } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 
 
-export default function Friends ({ navigation }) {
+export default function FindFriends ({ navigation }) {
     const [ allUsers, setAllUsers ] = useState([])
     const [ yourRequests, setYourRequests ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
@@ -45,7 +46,38 @@ export default function Friends ({ navigation }) {
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getAllFriends} />
                 }>
+                <View style={{alignSelf: 'left', margin: 0}}>
+                    <Button
+                        buttonStyle={{
+                            backgroundColor: 'transparent',
+                            borderColor: 'transparent',
+                            borderWidth: 0,
+                            borderRadius: 30,
+                            height: 80,
+                            width: 80,
+                        }}
+                        containerStyle={{
+                            width: 80,
+                            height: 80,
+                            alignSelf: 'center'
+                        }}
+                        onPress={() => navigation.navigate('Friends')}
+                        icon={<Icon name="arrow-left" size={80} color="white" />}
+                        iconRight
+                        />
+                </View>
                 <Text style={styles.listTitle}>Find Friends:</Text>
+                {isLoading ? <ActivityIndicator size="large" /> : 
+                <>{allUsers.length == 0 ? <Text style={styles.nopolls}>No Users!</Text> :
+                (allUsers.map(user => {
+                    return(
+                        <View>
+                            {user.username}
+                        </View>
+                    )
+                })
+                )}
+                </>}
             </ScrollView>
         </SafeAreaView>
     )
@@ -67,6 +99,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 30, 
     alignSelf: 'left', 
-    margin: 20
+    marginBottom: 20,
+    marginHorizontal: 20
   }
 });
