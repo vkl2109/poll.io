@@ -11,7 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useDispatch } from 'react-redux';
-import { logout as userLogout } from '../redux/reducers/userReducer'
+import { logout as userLogout } from '../../redux/reducers/userReducer'
 
 export default function Profile ({ navigation }) {
     const [ profile, setProfile ] = useState()

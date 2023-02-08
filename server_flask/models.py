@@ -94,20 +94,18 @@ class FriendRequest(db.Model):
     # __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     recipient = db.Column(db.String(80), nullable=False)
-    user1_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user2_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     accepted = db.Column(db.Boolean(), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
     def toJSON(self):
-        return {"id": self.id, "recipient": self.recipient, "user1_id": self.user1_id, "user2_id": self.user2_id, "accepted": self.accepted}
+        return {"id": self.id, "recipient": self.recipient, "user_id": self.user_id, "accepted": self.accepted}
 
-    def __init__(self, recipient, user1_id, user2_id, accepted=False):
+    def __init__(self, recipient, user_id, accepted=False):
         self.recipient = recipient
-        self.user1_id = user1_id
-        self.user2_id = user2_id
+        self.user_id = user_id
         self.accepted = accepted
 
     def __repr__(self):

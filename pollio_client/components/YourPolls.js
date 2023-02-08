@@ -59,14 +59,14 @@ export default function YourPolls ({ navigation }) {
                             <TouchableOpacity onPress={()=>setVisible(visible=>!visible)} style={styles.wrapper}>
                                 <YourPollStats option1T={poll.option1Tally} option2T={poll.option2Tally} user={poll.user} pollData={poll.poll}/>
                             </TouchableOpacity>
-                            {visible && poll.responses == 0 ? 
+                            {visible && (poll.responses == 0 ? 
                             <EmptyResponse />
                             :
                             (poll.responses.map((response, j)  => {
                                 return (
                                     <Response key={j} index={j} poll={poll.poll} response={response}/>
                                 )
-                            }))}
+                            })))}
                         </View>
                     )}   
                 ))}

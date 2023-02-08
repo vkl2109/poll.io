@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
 import PollTab from './PollTab'
 import Friends from './Friends'
-import ProfileTab from './ProfileTab'
+import ProfileTab from './Profile/ProfileTab'
 import { Icon } from '@rneui/themed';
 
 
