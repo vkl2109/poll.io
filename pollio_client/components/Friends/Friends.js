@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { ActivityIndicator, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
@@ -47,6 +47,9 @@ export default function Friends ({ navigation }) {
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getYourFriends} />
                 }>
+                <TouchableOpacity style={styles.findFriendsBtn} onPress={() => navigation.navigate('FindFriends')}>
+                    <Text style={{fontSize: 25}}>Find Friends!</Text>
+                </TouchableOpacity>
                 <Text style={styles.listTitle}>Your Friends:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
                 <>{yourFriends.length == 0 ? <Text style={styles.nopolls}>No Friends Yet!</Text> :
@@ -105,5 +108,16 @@ const styles = StyleSheet.create({
     fontSize: 30, 
     alignSelf: 'left', 
     margin: 20
-  }
+  },
+  findFriendsBtn: {
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    border: 1,
+    borderWidth: 1,
+    height: screenWidth * 0.2,
+    borderColor: 'black',
+  },
 });

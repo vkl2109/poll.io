@@ -6,7 +6,7 @@ const Stack = createNativeStackNavigator();
 
 export default function PollTab () {
     return(
-        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
             <Stack.Screen name='Friends' component={Friends} />
             <Stack.Screen name='FindFriends' component={FindFriends} />
         </Stack.Navigator>
