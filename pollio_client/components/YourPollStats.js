@@ -12,7 +12,37 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     let question = pollData['question']
     let option1 = pollData['option1']
     let option2 = pollData['option2']
+    let created_at = user['created_at']
     
+    const calculateTimePosted = () => {
+        let posted = 'posted '
+        const date = new Date()
+        if (parseInt(created_at.slice(6, 10)) < date.getFullYear()) {
+            posted += `${date.getFullYear() - parseInt(created_at.slice(6, 10))} years ago`
+            return posted
+        }
+        else if (parseInt(created_at.slice(0, 2)) < date.getMonth() + 1) {
+            posted += `${date.getMonth() + 1 - parseInt(created_at.slice(0, 2))} months ago`
+            return posted
+        }
+        else if (parseInt(created_at.slice(3, 5)) < date.getDate()) {
+            posted += `${date.getDate()- parseInt(created_at.slice(3, 5))} days ago`
+            return posted
+        }
+        else if (parseInt(created_at.slice(12, 14))< date.getHours()) {
+            posted += `${date.getHours()- parseInt(created_at.slice(12, 14))} hours ago`
+            return posted
+        }
+        else if (parseInt(created_at.slice(15, 17)) < date.getMinutes()) {
+            posted += `${date.getMinutes()- parseInt(created_at.slice(15, 17))} minutes ago`
+            return posted
+        }
+        else if (parseInt(created_at.slice(18)) < date.getSeconds()) {
+            posted += `${date.getSeconds()- parseInt(created_at.slice(18))} seconds ago`
+            return posted
+        }
+    }
+
     let avatarImg = null
     if (avatarBase64 != '') {
         avatarImg = "data:image/jpeg;base64," + avatarBase64
@@ -47,6 +77,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
         if (user['username'] == currentUsername.value) {
             setAvatarColor('#228b22')
         }
+        console.log(user['created_at'])
     },[])
     
     return (
@@ -78,6 +109,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
                     <Text style={styles.optionText} >{option2} : {option2T}</Text>
                 </View>
             </View>
+            <Text style={styles.datetime}>{calculateTimePosted()}</Text>
         </Animated.View>
     )
 }
@@ -130,5 +162,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#FFFFFF',
     marginVertical: 20,
+  },
+  datetime: {
+    fontWeight: '100',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontStyle: 'italic'
   }
 });

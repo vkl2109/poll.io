@@ -53,7 +53,7 @@ class Poll(db.Model):
                 option1Tally += 1
             elif response.response == self.option2:
                 option2Tally += 1
-        return {"user": {"avatarBase64" : user.avatarBase64, "username": user.username}, "poll" : self.toJSON(), "responses" : [response.to_dict() for response in self.responses], "option1Tally": option1Tally, "option2Tally": option2Tally}
+        return {"user": {"avatarBase64": user.avatarBase64, "username": user.username, "created_at": user.created_at.strftime("%m/%d/%Y, %H:%M:%S")}, "poll": self.toJSON(), "responses": [response.to_dict() for response in self.responses], "option1Tally": option1Tally, "option2Tally": option2Tally}
 
     def __init__(self, question, option1, option2, user_id):
         self.question = question
