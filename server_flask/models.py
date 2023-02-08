@@ -42,7 +42,7 @@ class Poll(db.Model):
     responses = db.relationship('Response', backref='poll', cascade='all, delete-orphan', lazy=True)
 
     def toJSON(self):
-        return {"id": self.id, "question": self.question, "option1": self.option1, "option2": self.option2, "user_id": self.user_id, "created_at": self.created_at.strftime("%m/%d/%Y, %H:%M:%S")}
+        return {"id": self.id, "question": self.question, "option1": self.option1, "option2": self.option2, "user_id": self.user_id, "created_at": self.created_at.isoformat()}
 
     def to_dict(self):
         user = User.query.get(self.user_id)

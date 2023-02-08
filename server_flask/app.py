@@ -238,6 +238,31 @@ def create_poll():
     db.session.commit()
     return jsonify(newPoll.toJSON()), 201
 
+
+@app.delete('/deletepoll/<int:id>')
+@jwt_required()
+def delete_poll(id):
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    print(user.id)
+    if not user:
+        print("no user found")
+        return jsonify({'error': 'No account found'}), 404
+    poll = Poll.query.get(id)
+    if poll:
+        responses = poll.responses
+        for response in responses:
+            deleteResponse = Response.query.get(response.id)
+            db.session.delete(deleteResponse)
+            db.session.commit()
+        db.session.delete(poll)
+        db.session.commit()
+        return jsonify({"success" : "poll deleted"}), 202
+    else:
+        return jsonify({'error': 'No account found'}), 404
+    
+    return jsonify(newPoll.toJSON()), 201
+
 @socketio.on('connect')
 @jwt_required()
 def connected():

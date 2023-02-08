@@ -10,7 +10,6 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     const [ canDelete, setCanDelete ] = useState(false)
     const [ deleteView, setDeleteView ] = useState(false);
 
-
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
     let question = pollData['question']
@@ -19,31 +18,40 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     let created_at = pollData['created_at']
     
     const calculateTimePosted = () => {
-        let posted = 'posted '
         const date = new Date()
-        if (parseInt(created_at.slice(6, 10)) < date.getFullYear()) {
-            posted += `${date.getFullYear() - parseInt(created_at.slice(6, 10))} years ago`
-            return posted
+        const pollDate = new Date(pollData['created_at'])
+        const diffTime = Math.abs(pollDate - date);
+        const diffSeconds = Math.floor(diffTime / (1000));
+        if (diffSeconds > 59) {
+            const diffMinutes = Math.floor(diffSeconds / 60)
+            if (diffMinutes > 59) {
+                const diffHours = Math.floor(diffMinutes / 60)
+                if (diffHours > 23) {
+                    const diffDays = Math.floor(diffHours / 24)
+                    if (diffDays > 30) {
+                        const diffMonths = Math.floor(diffDays / 30)
+                        if (diffMonths > 11) {
+                            const diffYears = Math.floor(diffMonths / 12)
+                            return `posted ${diffYears} year${diffYears != 1 ? 's' : ''} ago`
+                        }
+                        else {
+                            return `posted ${diffMonths} month${diffMonths != 1 ? 's' : ''} ago`
+                        }
+                    }
+                    else {
+                        return `posted ${diffDays} day${diffDays != 1 ? 's' : ''} ago`
+                    }
+                }
+                else {
+                    return `posted ${diffHours} hour${diffHours != 1 ? 's' : ''} ago`
+                }
+            }
+            else {
+                return `posted ${diffMinutes} minute${diffMinutes != 1 ? 's' : ''} ago`
+            }
         }
-        else if (parseInt(created_at.slice(0, 2)) < date.getMonth() + 1) {
-            posted += `${date.getMonth() + 1 - parseInt(created_at.slice(0, 2))} months ago`
-            return posted
-        }
-        else if (parseInt(created_at.slice(3, 5)) < date.getDate()) {
-            posted += `${date.getDate()- parseInt(created_at.slice(3, 5))} days ago`
-            return posted
-        }
-        else if (parseInt(created_at.slice(12, 14))< date.getHours()) {
-            posted += `${date.getHours()- parseInt(created_at.slice(12, 14))} hours ago`
-            return posted
-        }
-        else if (parseInt(created_at.slice(15, 17)) < date.getMinutes()) {
-            posted += `${date.getMinutes()- parseInt(created_at.slice(15, 17))} minutes ago`
-            return posted
-        }
-        else if (parseInt(created_at.slice(18)) < date.getSeconds()) {
-            posted += `${date.getSeconds()- parseInt(created_at.slice(18))} seconds ago`
-            return posted
+        else {
+            return `posted ${diffSeconds} second${diffSeconds != 1 ? 's' : ''} ago`
         }
     }
 
@@ -76,8 +84,22 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
         }).start();
     };
 
-    const handleDelete = () => {
-        
+    const handleDelete = async () => {
+        let req = await fetch(`http://10.129.2.90:5000/deletepoll/${pollData['id']}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
+        if (req.ok) {
+            alert('Poll deleted!')
+        }
+        else {
+            let res = await req.json()
+            alert(res.error)
+        }
+        setDeleteView(false)
     }
 
     useEffect(()=> {
