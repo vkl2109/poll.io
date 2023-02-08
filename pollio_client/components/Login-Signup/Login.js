@@ -14,7 +14,7 @@ export default function Login ({ navigation }) {
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
     const dispatch = useDispatch();
-    const logoUrl = require('../images/pollmate_logo.png')
+    const logoUrl = require('./images/pollmate_logo.png')
 
     const handleLogin = () => {
         const login = async () => {
