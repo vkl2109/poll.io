@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
-import { Button, Dialog } from '@rneui/themed';
+import { Button, Dialog, Icon } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -75,6 +75,29 @@ export default function CreatePoll ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{alignSelf: 'left'}}>
+                <Button
+                    buttonStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 30,
+                        paddingTop: 6,
+                        height: 100,
+                        width: 100,
+                    }}
+                    containerStyle={{
+                        width: 100,
+                        height: 100,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    onPress={() => navigation.navigate('YourPolls')}
+                    icon={<Icon name="arrow-left" size={80} color="white" />}
+                    iconRight
+                    />
+            </View>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}>
                 <Dialog
                     isVisible={errorDialog}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPollStats from './YourPollStats'
+import { Button, Icon } from '@rneui/themed';
 import Response from './Response'
 import * as SecureStore from 'expo-secure-store';
 
@@ -37,7 +38,30 @@ export default function ViewPoll ({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center', alignItems: 'center', width: screenWidth}}>
+            <View style={{alignSelf: 'left'}}>
+                <Button
+                    buttonStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 30,
+                        paddingTop: 6,
+                        height: 100,
+                        width: 100,
+                    }}
+                    containerStyle={{
+                        width: 100,
+                        height: 100,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    onPress={() => navigation.navigate('Feed')}
+                    icon={<Icon name="arrow-left" size={80} color="white" />}
+                    iconRight
+                    />
+            </View>
+            <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
                 <YourPollStats user={pollData.user} pollData={pollData.poll} option1T={option1T} option2T={option2T}/>
                 {responses.map((response, i) => {
                   return(

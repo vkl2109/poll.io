@@ -20,7 +20,7 @@ export default function App() {
       <Provider store={store}>
         <PaperProvider>
           <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
+            <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
               <Stack.Screen name='Login' component={Login} />
               <Stack.Screen name='Signup' component={Signup} />
               <Stack.Screen name='SignupCamera' component={SignupCamera} />

@@ -74,9 +74,8 @@ export default function ProfileCamera({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.backBtn}>
+            <View style={{alignSelf: 'left'}}>
                 <Button
-                    title={""}
                     buttonStyle={{
                         backgroundColor: 'transparent',
                         borderColor: 'transparent',
@@ -93,7 +92,6 @@ export default function ProfileCamera({ navigation }) {
                         marginVertical: 10,
                         alignSelf: 'center'
                     }}
-                    titleStyle={{ fontWeight: 'bold' }}
                     onPress={() => navigation.navigate('ProfileMain')}
                     icon={<Icon name="arrow-left" size={80} color="white" />}
                     iconRight
@@ -224,9 +222,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 1000,
         overflow: 'hidden'
-    },
-    backBtn: {
-        alignSelf: 'left'
     },
     image: {
         flex: 1,
