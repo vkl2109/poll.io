@@ -6,7 +6,7 @@ import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { useDispatch } from 'react-redux';
-import { uploadAvatar } from '../redux/reducers/avatarReducer'
+import { uploadAvatar } from '../../redux/reducers/avatarReducer'
 
 const screenWidth = Dimensions.get('window').width; 
 

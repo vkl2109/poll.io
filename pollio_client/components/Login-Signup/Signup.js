@@ -12,8 +12,8 @@ import { Camera } from 'expo-camera';
 import { captureRef } from 'react-native-view-shot';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
-import { login as userLogin } from '../redux/reducers/userReducer'
-import { uploadAvatar, deleteAvatar } from '../redux/reducers/avatarReducer'
+import { login as userLogin } from '../../redux/reducers/userReducer'
+import { uploadAvatar, deleteAvatar } from '../../redux/reducers/avatarReducer'
 
 const screenWidth = Dimensions.get('window').width; 
 

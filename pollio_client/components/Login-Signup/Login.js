@@ -5,7 +5,7 @@ import { TextInput } from 'react-native-paper';
 import { Button, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
-import { login as userLogin } from '../redux/reducers/userReducer'
+import { login as userLogin } from '../../redux/reducers/userReducer'
 
 export default function Login ({ navigation }) {
     const [ username, setUsername ] = useState('')
@@ -14,7 +14,7 @@ export default function Login ({ navigation }) {
     const [ errorMsg, setErrorMsg ] = useState('')
     const [ errorDialog, setErrorDialog ] = useState(false)
     const dispatch = useDispatch();
-    const logoUrl = require('../assets/pollmate_logo.png')
+    const logoUrl = require('.../assets/pollmate_logo.png')
 
     const handleLogin = () => {
         const login = async () => {

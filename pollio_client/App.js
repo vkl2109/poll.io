@@ -7,9 +7,9 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 
-import Login from './components/Login';
-import Signup from './components/Signup';
-import SignupCamera from './components/SignupCamera';
+import Login from './components/Login-Signup/Login';
+import Signup from './components/Login-Signup/Signup';
+import SignupCamera from './components/Login-Signup/SignupCamera';
 import Main from './components/Main';
 
 const Stack = createNativeStackNavigator();

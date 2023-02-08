@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import YourPollStats from './YourPollStats'
+import YourPollStats from '../YourPollStats'
 import { Button, Icon } from '@rneui/themed';
-import Response from './Response'
-import EmptyResponse from './EmptyResponse'
+import Response from '../Response'
+import EmptyResponse from '../EmptyResponse'
 import * as SecureStore from 'expo-secure-store';
 
 export default function ViewPoll ({ navigation, route }) {

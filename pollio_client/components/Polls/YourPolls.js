@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPoll from './YourPoll'
-import EmptyResponse from './EmptyResponse'
+import EmptyResponse from '../EmptyResponse'
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 
 import { useFocusEffect } from '@react-navigation/native';
-import YourPollStats from './YourPollStats'
-import Response from './Response'
+import YourPollStats from '../YourPollStats'
+import Response from '../Response'
 
 export default function YourPolls ({ navigation }) {
     const [ yourPolls, setYourPolls ] = useState([])

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, Animated, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Poll from './Poll'
+import Poll from '../Poll'
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function Feed ({ navigation }) {

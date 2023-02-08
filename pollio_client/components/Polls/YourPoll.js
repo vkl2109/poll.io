@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import PollStats from './PollStats'
-import Response from './Response'
+import PollStats from '../PollStats'
+import Response from '../Response'
 
 export default function YourPoll ({ poll }) {
     const [ visible, setVisible ] = useState(false)
