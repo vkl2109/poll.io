@@ -6,7 +6,10 @@ from datetime import datetime
 db = SQLAlchemy()
 migrate = Migrate(db)
 
-
+friends = db.Table('friends',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('friend_id', db.Integer, db.ForeignKey('user.id'))
+)
 class User(db.Model):
     # __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +22,21 @@ class User(db.Model):
     responses = db.relationship('Response', backref='user', cascade='all, delete-orphan', lazy=True)
     friendrequests = db.relationship(
         'FriendRequest', backref='user', cascade='all, delete-orphan', lazy=True)
+    friends = db.relationship(
+        'User', secondary=friends,
+        primaryjoin=(friends.c.user_id == id),
+        secondaryjoin=(friends.c.friend_id == id),
+        backref=db.backref('friends', lazy='dynamic'), lazy='dynamic')
+
+    def befriend(self, friend):
+        if friend not in self.friends:
+            self.friends.append(friend)
+            friend.friends.append(self)
+
+    def unfriend(self, friend):
+        if friend in self.friends:
+            self.friends.remove(friend)
+            friend.friends.remove(self)
 
     def toJSON(self):
         return {"id": self.id, "username": self.username, "password": self.password, "avatarBase64": self.avatarBase64}

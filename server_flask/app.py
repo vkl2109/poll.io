@@ -22,6 +22,16 @@ def home():
     return send_file('welcome.html')
 
 
+@app.post('/friends')
+@jwt_required()
+def get_friends():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        return jsonify({'error': 'No account found'}), 404
+    else:
+        return jsonify(user.all_friends()), 200
+
 @app.patch('/profile')
 @jwt_required()
 def patch_user():

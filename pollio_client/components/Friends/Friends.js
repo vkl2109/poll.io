@@ -44,6 +44,7 @@ export default function Friends ({ navigation }) {
                     <RefreshControl refreshing={refreshing} onRefresh={getYourFriends} />
                 }>
                 {isLoading ? <ActivityIndicator size="large" /> : 
+                <>{yourFriends.length == 0 ? <Text style={styles.nopolls}>No Friends Yet!</Text> :
                 (yourFriends.map(friend => {
                     return(
                         <View>
@@ -53,6 +54,7 @@ export default function Friends ({ navigation }) {
                 })
 
                 )}
+                </>}
             </ScrollView>
         </SafeAreaView>
     )
@@ -65,5 +67,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADD8E6', // '#25292e'
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  nopolls: {
+    fontSize: 25,
+    margin: 10,
   },
 });
