@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
-import { Button, Avatar } from '@rneui/themed';
+import { Button, Avatar, Icon, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import { useSelector } from "react-redux"
 
 export default function PollStats ({ index, user, pollData, option1T, option2T }) {
     const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
+    const [ usernameColor, setUsernameColor ] = useState('red')
+    const [ canDelete, setCanDelete ] = useState(false)
+    const [ deleteView, setDeleteView ] = useState(false);
+
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
@@ -72,16 +76,62 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
         }).start();
     };
 
+    const handleDelete = () => {
+        
+    }
+
     useEffect(()=> {
         slideIn()
         if (user['username'] == currentUsername.value) {
             setAvatarColor('#228b22')
+            setUsernameColor('#228b22')
+            setCanDelete(true)
         }
         // console.log(pollData['created_at'])
     },[])
     
     return (
         <Animated.View style={{...styles.pollCard, transform: [{ translateY: slideUp }],}}>
+            <Dialog
+                isVisible={deleteView}
+                onBackdropPress={() => setDeleteView(false)}
+                >
+                <Dialog.Title style={styles.dialogTitle} title={"Delete Poll?"} />
+                <View style={styles.buttonContainer}> 
+                    <Button
+                        title={"Yes"}
+                        buttonStyle={{
+                            backgroundColor: 'green',
+                            borderWidth: 0,
+                            borderColor: 'white',
+                            borderRadius: 30,
+                        }}
+                        containerStyle={{
+                            width: 100,
+                            marginHorizontal: 5,
+                            marginVertical: 10,
+                        }}
+                        titleStyle={{ fontWeight: 'bold' }}
+                        onPress={() => handleDelete()}
+                        />
+                    <Button
+                        title={"No"}
+                        buttonStyle={{
+                            backgroundColor: 'red',
+                            borderWidth: 0,
+                            borderColor: 'white',
+                            borderRadius: 30,
+                        }}
+                        containerStyle={{
+                            width: 100,
+                            marginHorizontal: 5,
+                            marginVertical: 10,
+                        }}
+                        titleStyle={{ fontWeight: 'bold' }}
+                        onPress={() => setDeleteView(false)}
+                        />
+                </View> 
+            </Dialog>
             <View style={styles.header}>
                 {avatarImg ? 
                 <Avatar
@@ -98,7 +148,27 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
                     containerStyle={{ margin: 10, display: 'flex'}}
                     titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
                     />}
-                <Text style={styles.username}>{username} asks...</Text>
+                <Text style={{color: usernameColor}}>{username} asks...</Text>
+                {canDelete && 
+                <Button
+                    buttonStyle={{
+                        backgroundColor: 'red',
+                        borderRadius: 30,
+                        height: 30,
+                        width: 30
+                    }}
+                    containerStyle={{
+                        height: 40,
+                        width: 40,
+                        marginLeft: 'auto',
+                        marginRight: 20,
+                        marginVertical: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                    icon={<Icon name="delete" size={10} color="white" style={{ alignSelf: 'center'}} />}
+                    onPress={() => setDeleteView(true)}
+                    />}
             </View>
             <Text style={styles.question}>{question}</Text>
             <View style={styles.buttonContainer}>
@@ -127,9 +197,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'left'
-  },
-  username: {
-    color: 'red'
   },
   question: {
     alignSelf: 'center',

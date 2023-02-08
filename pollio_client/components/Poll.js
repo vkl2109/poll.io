@@ -8,6 +8,8 @@ export default function Poll ({ index, user, pollData }) {
     const [ option1Color, setOption1Color ] = useState('#FFA500')
     const [ option2Color, setOption2Color ] = useState('#FFA500')
     const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
+    const [ usernameColor, setUsernameColor ] = useState('red')
+
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
@@ -174,6 +176,7 @@ export default function Poll ({ index, user, pollData }) {
         checkPoll()
         if (user['username'] == currentUsername.value) {
             setAvatarColor('#228b22')
+            setUsernameColor('#228b22')
         }
     },[])
     
@@ -195,7 +198,7 @@ export default function Poll ({ index, user, pollData }) {
                     containerStyle={{ margin: 10, display: 'flex'}}
                     titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
                     />}
-                <Text style={styles.username}>{username} asks...</Text>
+                <Text style={{color: usernameColor}}>{username} asks...</Text>
             </View>
             <Text style={styles.question}>{question}</Text>
             <View style={styles.buttonContainer}>
@@ -252,9 +255,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'left'
-  },
-  username: {
-    color: 'red'
   },
   question: {
     alignSelf: 'center',
