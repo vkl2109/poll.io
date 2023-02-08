@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPoll from './YourPoll'
+import EmptyResponse from './EmptyResponse'
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 
 import { useFocusEffect } from '@react-navigation/native';
@@ -58,7 +59,10 @@ export default function YourPolls ({ navigation }) {
                             <TouchableOpacity onPress={()=>setVisible(visible=>!visible)} style={styles.wrapper}>
                                 <YourPollStats option1T={poll.option1Tally} option2T={poll.option2Tally} user={poll.user} pollData={poll.poll}/>
                             </TouchableOpacity>
-                            {visible && (poll.responses.map((response, j)  => {
+                            {visible && poll.responses == 0 ? 
+                            <EmptyResponse />
+                            :
+                            (poll.responses.map((response, j)  => {
                                 return (
                                     <Response key={j} index={j} poll={poll.poll} response={response}/>
                                 )

@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPollStats from './YourPollStats'
 import { Button, Icon } from '@rneui/themed';
 import Response from './Response'
+import EmptyResponse from './EmptyResponse'
 import * as SecureStore from 'expo-secure-store';
 
 export default function ViewPoll ({ navigation, route }) {
@@ -63,11 +64,14 @@ export default function ViewPoll ({ navigation, route }) {
             </View>
             <ScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'top', alignItems: 'center', width: screenWidth}}>
                 <YourPollStats user={pollData.user} pollData={pollData.poll} option1T={option1T} option2T={option2T}/>
-                {responses.map((response, i) => {
+                {responses.length == 0 ? 
+                <EmptyResponse />
+                :
+                (responses.map((response, i) => {
                   return(
                     <Response key={i} index={i} poll = {pollData.poll} response={response}/>
                   )
-                })}
+                }))}
             </ScrollView>
         </SafeAreaView>
     )
