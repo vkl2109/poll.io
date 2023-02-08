@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     width: 'auto',
+    minWidth: 100,
     marginHorizontal: 5,
     marginVertical: 10,
   },
@@ -153,7 +154,8 @@ const styles = StyleSheet.create({
     margin: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
+    textAlign: 'center'
   },
   pollCard: {
     width: '80%',

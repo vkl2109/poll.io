@@ -207,9 +207,10 @@ export default function Poll ({ index, user, pollData }) {
                         borderWidth: 1,
                         borderRadius: 10,
                         width: 'auto',
+                        minWidth: 100
                     }}
                     containerStyle={{
-                        marginHorizontal: 30,
+                        marginHorizontal: 10,
                         marginVertical: 10,
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
@@ -223,9 +224,10 @@ export default function Poll ({ index, user, pollData }) {
                         borderWidth: 1,
                         borderRadius: 10,
                         width: 'auto',
+                        minWidth: 100
                     }}
                     containerStyle={{
-                        marginHorizontal: 30,
+                        marginHorizontal: 10,
                         marginVertical: 10,
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
