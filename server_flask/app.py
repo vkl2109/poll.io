@@ -85,6 +85,7 @@ def create_user():
 @app.get('/polls')
 def all_polls():
     polls = Poll.query.all()
+    polls = polls[::-1]
     if len(polls):
         return jsonify([poll.to_dict() for poll in polls]), 200
     else:
@@ -219,6 +220,7 @@ def your_polls():
         print("no user found")
         return jsonify({'error': 'No account found'}), 404
     polls = Poll.query.filter_by(user_id=user.id)
+    polls = polls[::-1]
     return jsonify([poll.to_dict() for poll in polls]), 200
 
 @app.post('/createpoll')

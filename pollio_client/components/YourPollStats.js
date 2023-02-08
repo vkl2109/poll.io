@@ -12,7 +12,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     let question = pollData['question']
     let option1 = pollData['option1']
     let option2 = pollData['option2']
-    let created_at = user['created_at']
+    let created_at = pollData['created_at']
     
     const calculateTimePosted = () => {
         let posted = 'posted '
@@ -77,7 +77,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
         if (user['username'] == currentUsername.value) {
             setAvatarColor('#228b22')
         }
-        console.log(user['created_at'])
+        // console.log(pollData['created_at'])
     },[])
     
     return (
