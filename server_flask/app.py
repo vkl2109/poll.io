@@ -22,6 +22,16 @@ def home():
     return send_file('welcome.html')
 
 
+@app.delete('/deleterequest/<int:id>')
+def delete_request(id):
+    find_request = FriendRequest.query.get(id)
+    if find_request:
+        db.session.delete(find_request)
+        db.session.commit()
+        return {}, 200
+    else:
+        return jsonify({'error': 'No request found'}), 404
+
 @app.post('/createrequest')
 @jwt_required()
 def create_request():

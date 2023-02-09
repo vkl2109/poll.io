@@ -16,13 +16,18 @@ export default function Friends ({ navigation }) {
     const [ visibleRequest, setVisibleRequest ] = useState(false)
     const [ currentSentRequest, setCurrentSentRequest ] = useState('')
 
-    const handleDeleteRequest = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/deleterequest/${request.id}`, {
+    const handleDeleteRequest = async (r) => {
+        let req = await fetch(`http://10.129.2.90:5000/deleterequest/${r.id}`, {
             method: 'DELETE'
         })
         if (req.ok) {
             setVisibleRequest(false)
+            getYourFriends()
             alert('Request deleted')
+        }
+        else {
+            let res = await req.json()
+            console.log(res.error)
         }
     }
 
@@ -46,7 +51,7 @@ export default function Friends ({ navigation }) {
     }
 
     const toggleDeleteView = (r) => {
-        setCurrentSentRequest(currentSentRequest => r.recipient)
+        setCurrentSentRequest(currentSentRequest => r)
         setVisibleRequest(true)
     }
 
@@ -69,7 +74,7 @@ export default function Friends ({ navigation }) {
                 <Dialog isVisible={visibleRequest}
                     onBackdropPress={() => setVisibleRequest(false)}
                     >
-                        <Dialog.Title title={`Remove ${currentSentRequest} friend request?`}/>
+                        <Dialog.Title title={`Remove ${currentSentRequest.recipient} friend request?`}/>
                         <View style={styles.buttonContainer}>
                             <Button
                                 title={"Yes"}
@@ -85,7 +90,7 @@ export default function Friends ({ navigation }) {
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => handleDeleteRequest()}
+                                onPress={() => handleDeleteRequest(currentSentRequest)}
                                 />
                             <Button
                                 title={"No"}
