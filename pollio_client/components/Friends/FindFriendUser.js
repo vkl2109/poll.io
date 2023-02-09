@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Button, Avatar } from '@rneui/themed';
+import { Button, Avatar, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import { useSelector } from "react-redux"
 
@@ -8,6 +8,9 @@ export default function FindFriendUser ({ index, user }) {
     const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
     const [ usernameColor, setUsernameColor ] = useState('red')
     const [ sentColor, setSentColor ] = useState('white')
+    const [ selfError, setSelfError ] = useState(false)
+    const [ visibleRequest, setVisibleRequest ] = useState(false)
+    const [ alreadySent, setAlreadySent ] = useState(false)
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
@@ -30,10 +33,41 @@ export default function FindFriendUser ({ index, user }) {
         }).start();
     };
 
+    const handleRequest = () => {
+        if (user['username'] == currentUsername.value) {
+            setSelfError(true)
+        }
+        else if (sentColor == 'white') {
+            setVisibleRequest(true)
+        }
+        else if (sentColor == 'lightgrey'){
+            setAlreadySent(true)
+        }
+    }
+
+    const handleFriendRequest = async () => {
+        let req = await fetch('http://10.129.2.90:5000/createrequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }, 
+            body: JSON.stringify({
+                "recipient" : user.username
+            })
+        })
+        if (req.ok) {
+            setVisibleRequest(false)
+            alert('Friend Request Sent!')
+            setSentColor('lightgrey')
+        }
+    }
+
     useEffect(()=> {
         slideIn()
         if (user['username'] == currentUsername.value) {
             setAvatarColor('#228b22')
+            setUsernameColor('#228b22')
         }
         if (user['requested'] == 1) {
             setSentColor('lightgrey')
@@ -42,7 +76,56 @@ export default function FindFriendUser ({ index, user }) {
     
     return (
         <Animated.View style={{...styles.pollCard, transform: [{ translateY: slideUp }],}}>
-            <TouchableOpacity style={{backgroundColor: sentColor, borderRadius: 10}}>
+            <TouchableOpacity onPress={handleRequest} style={{backgroundColor: sentColor, borderRadius: 10}}>
+                <Dialog isVisible={selfError}
+                    onBackdropPress={() => setSelfError(false)}
+                    >
+                        <Dialog.Title title={"Can't friend yourself!"}/>
+                </Dialog>
+                <Dialog isVisible={alreadySent}
+                    onBackdropPress={() => setAlreadySent(false)}
+                    >
+                        <Dialog.Title title={"Already Sent Request"}/>
+                </Dialog>
+                <Dialog isVisible={visibleRequest}
+                    onBackdropPress={() => setVisibleRequest(false)}
+                    >
+                        <Dialog.Title title={"Send Friend Request?"}/>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                title={"Yes"}
+                                buttonStyle={{
+                                    backgroundColor: 'green',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleFriendRequest()}
+                                />
+                            <Button
+                                title={"No"}
+                                buttonStyle={{
+                                    backgroundColor: 'red',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => setVisibleRequest(false)}
+                                />
+                        </View>
+                </Dialog>
                 <View style={styles.header}>
                     {avatarImg ? 
                     <Avatar

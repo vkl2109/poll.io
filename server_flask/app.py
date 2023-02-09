@@ -21,6 +21,21 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 def home():
     return send_file('welcome.html')
 
+
+@app.post('/createrequest')
+@jwt_required()
+def create_request():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        return jsonify({'error': 'No account found'}), 404
+    else:
+        data = request.json
+        newRequest = FriendRequest(data['recipient'], user.id, False)
+        db.session.add(newRequest)
+        db.session.commit()
+        return jsonify(newRequest.toJSON()), 201
+
 @app.post('/yourfriends')
 @jwt_required()
 def get_friends():
@@ -43,14 +58,15 @@ def all_friends():
         allusers = User.query.all()
         serializedusers = []
         for friend in allusers:
-            if friend.username in user.all_requests():
-                newFriend = friend.toJSON()
-                newFriend['requested'] = 1
-                serializedusers.append(newFriend)
-            else:
-                newFriend = friend.toJSON()
-                newFriend['requested'] = 0
-                serializedusers.append(newFriend)
+            if friend.username not in [friend.username for friend in user.friends]:
+                if friend.username in user.all_requests():
+                    newFriend = friend.toJSON()
+                    newFriend['requested'] = 1
+                    serializedusers.append(newFriend)
+                else:
+                    newFriend = friend.toJSON()
+                    newFriend['requested'] = 0
+                    serializedusers.append(newFriend)
         return jsonify(serializedusers), 200
 
 @app.patch('/profile')

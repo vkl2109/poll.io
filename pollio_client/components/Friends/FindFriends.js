@@ -65,7 +65,7 @@ export default function FindFriends ({ navigation }) {
                         iconRight
                         />
                 </View>
-                <Text style={styles.listTitle}>Find Friends:</Text>
+                <Text style={styles.listTitle}>Find New Friends:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
                 <>{allUsers.length == 0 ? <Text style={styles.nopolls}>No Users!</Text> :
                 (allUsers.map((user, i) => {

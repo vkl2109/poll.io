@@ -55,9 +55,9 @@ export default function Friends ({ navigation }) {
                 <>{yourFriends.length == 0 ? <Text style={styles.nopolls}>No Friends Yet!</Text> :
                 (yourFriends.map(friend => {
                     return(
-                        <View>
+                        <Text>
                             {friend.username}
-                        </View>
+                        </Text>
                     )
                 })
                 )}
@@ -67,9 +67,9 @@ export default function Friends ({ navigation }) {
                 <>{yourRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Sent!</Text> :
                 (yourRequests.map(request => {
                     return(
-                        <View>
+                        <Text>
                             {request.recipient}
-                        </View>
+                        </Text>
                     )
                 })
                 )}
@@ -79,9 +79,9 @@ export default function Friends ({ navigation }) {
                 <>{receivedRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Received!</Text> :
                 (receivedRequests.map(received => {
                     return(
-                        <View>
+                        <Text>
                             {received.recipient}
-                        </View>
+                        </Text>
                     )
                 })
                 )}
