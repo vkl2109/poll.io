@@ -14,7 +14,9 @@ export default function Friends ({ navigation }) {
     const [ isLoading, setIsLoading ] = useState(true)
     const [ refreshing, setRefreshing ] = useState(false);
     const [ visibleRequest, setVisibleRequest ] = useState(false)
-    const [ currentSentRequest, setCurrentSentRequest ] = useState('')
+    const [ currentSentRequest, setCurrentSentRequest ] = useState({})
+    const [ acceptView, setAcceptView ] = useState(false)
+    const [ currentPendingRequest, setCurrentPendingRequest ] = useState({})
 
     const handleDeleteRequest = async (r) => {
         let req = await fetch(`http://10.129.2.90:5000/deleterequest/${r.id}`, {
@@ -24,6 +26,28 @@ export default function Friends ({ navigation }) {
             setVisibleRequest(false)
             getYourFriends()
             alert('Request deleted')
+        }
+        else {
+            let res = await req.json()
+            console.log(res.error)
+        }
+    }
+
+    const handleAcceptRequest = async (r) => {
+        let req = await fetch('http://10.129.2.90:5000/createfriend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                friend: currentPendingRequest.sender
+            })
+        })
+        if (req.ok) {
+            setAcceptView(false)
+            getYourFriends()
+            alert('Request accepted')
         }
         else {
             let res = await req.json()
@@ -53,6 +77,11 @@ export default function Friends ({ navigation }) {
     const toggleDeleteView = (r) => {
         setCurrentSentRequest(currentSentRequest => r)
         setVisibleRequest(true)
+    }
+
+     const toggleAcceptView = (r) => {
+        setCurrentPendingRequest(currentPendingRequest => r)
+        setAcceptView(true)
     }
 
     useEffect(()=>{
@@ -110,6 +139,45 @@ export default function Friends ({ navigation }) {
                                 />
                         </View>
                 </Dialog>
+                <Dialog isVisible={acceptView}
+                    onBackdropPress={() => setAcceptView(false)}
+                    >
+                        <Dialog.Title title={`Accept ${currentPendingRequest.sender} friend request?`}/>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                title={"Yes"}
+                                buttonStyle={{
+                                    backgroundColor: 'green',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleAcceptRequest(currentPendingRequest)}
+                                />
+                            <Button
+                                title={"No"}
+                                buttonStyle={{
+                                    backgroundColor: 'red',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => setAcceptView(false)}
+                                />
+                        </View>
+                </Dialog>
                 <TouchableOpacity style={styles.findFriendsBtn} onPress={() => navigation.navigate('FindFriends')}>
                     <Text style={{fontSize: 25}}>Find Friends!</Text>
                 </TouchableOpacity>
@@ -129,6 +197,26 @@ export default function Friends ({ navigation }) {
                 })
                 )}
                 </>}
+                <Text style={styles.listTitle}>Pending Requests:</Text>
+                {isLoading ? <ActivityIndicator size="large" /> : 
+                <>{receivedRequests.length == 0 ? 
+                <View style={styles.placeholder}>
+                    <Text style={styles.nopolls}>No Requests Received!</Text> 
+                </View>
+                :
+                (receivedRequests.map((r, i) => {
+                    return(
+                        <TouchableOpacity key={i} onPress={() => toggleAcceptView(r)} style={{borderRadius: 10, width: '80%'}}>
+                            <View style={styles.request}>
+                                <Text style={{fontSize: 20, margin: 10}}>
+                                    {r.sender} sent a friend request
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                })
+                )}
+                </>}
                 <Text style={styles.listTitle}>Sent Requests:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
                 <>{yourRequests.length == 0 ? 
@@ -141,24 +229,6 @@ export default function Friends ({ navigation }) {
                         <TouchableOpacity key={i} onPress={() => toggleDeleteView(r)} style={{borderRadius: 10, width: '80%'}}>
                             <SentRequest index={i} request={r} />
                         </TouchableOpacity>
-                    )
-                })
-                )}
-                </>}
-                <Text style={styles.listTitle}>Pending Requests:</Text>
-                {isLoading ? <ActivityIndicator size="large" /> : 
-                <>{receivedRequests.length == 0 ? 
-                <View style={styles.placeholder}>
-                    <Text style={styles.nopolls}>No Requests Received!</Text> 
-                </View>
-                :
-                (receivedRequests.map(received => {
-                    return(
-                        <View style={styles.request}>
-                            <Text style={{fontSize: 20, margin: 10}}>
-                                {received.sender} sent a friend request
-                            </Text>
-                        </View>
                     )
                 })
                 )}
@@ -189,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   request: {
-    width: '80%',
+    width: '100%',
     alignItems: 'center',
     backgroundColor: 'white',
     borderColor: 'black',
