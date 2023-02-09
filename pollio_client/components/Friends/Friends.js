@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { Button, Avatar, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
+import SentRequest from './SentRequest'
 const screenWidth = Dimensions.get('window').width; 
 
 export default function Friends ({ navigation }) {
@@ -11,6 +13,18 @@ export default function Friends ({ navigation }) {
     const [ receivedRequests, setReceivedRequests ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
     const [ refreshing, setRefreshing ] = useState(false);
+    const [ visibleRequest, setVisibleRequest ] = useState(false)
+    const [ currentSentRequest, setCurrentSentRequest ] = useState('')
+
+    const handleDeleteRequest = async () => {
+        let req = await fetch(`http://10.129.2.90:5000/deleterequest/${request.id}`, {
+            method: 'DELETE'
+        })
+        if (req.ok) {
+            setVisibleRequest(false)
+            alert('Request deleted')
+        }
+    }
 
     const getYourFriends = async () => {
         setRefreshing(true)
@@ -31,6 +45,11 @@ export default function Friends ({ navigation }) {
         setRefreshing(false)
     }
 
+    const toggleDeleteView = (r) => {
+        setCurrentSentRequest(currentSentRequest => r.recipient)
+        setVisibleRequest(true)
+    }
+
     useEffect(()=>{
         getYourFriends()
     },[])
@@ -47,6 +66,45 @@ export default function Friends ({ navigation }) {
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getYourFriends} />
                 }>
+                <Dialog isVisible={visibleRequest}
+                    onBackdropPress={() => setVisibleRequest(false)}
+                    >
+                        <Dialog.Title title={`Remove ${currentSentRequest} friend request?`}/>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                title={"Yes"}
+                                buttonStyle={{
+                                    backgroundColor: 'green',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleDeleteRequest()}
+                                />
+                            <Button
+                                title={"No"}
+                                buttonStyle={{
+                                    backgroundColor: 'red',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => setVisibleRequest(false)}
+                                />
+                        </View>
+                </Dialog>
                 <TouchableOpacity style={styles.findFriendsBtn} onPress={() => navigation.navigate('FindFriends')}>
                     <Text style={{fontSize: 25}}>Find Friends!</Text>
                 </TouchableOpacity>
@@ -73,11 +131,11 @@ export default function Friends ({ navigation }) {
                     <Text style={styles.nopolls}>No Requests Sent!</Text>
                 </View>
                 :
-                (yourRequests.map(request => {
+                (yourRequests.map((r, i) => {
                     return(
-                        <Text>
-                            {request.recipient}
-                        </Text>
+                        <TouchableOpacity key={i} onPress={() => toggleDeleteView(r)} style={{borderRadius: 10, width: '80%'}}>
+                            <SentRequest index={i} request={r} />
+                        </TouchableOpacity>
                     )
                 })
                 )}
@@ -91,9 +149,11 @@ export default function Friends ({ navigation }) {
                 :
                 (receivedRequests.map(received => {
                     return(
-                        <Text>
-                            {received.sender} sent a friend request
-                        </Text>
+                        <View style={styles.request}>
+                            <Text style={{fontSize: 20, margin: 10}}>
+                                {received.sender} sent a friend request
+                            </Text>
+                        </View>
                     )
                 })
                 )}
@@ -118,6 +178,14 @@ const styles = StyleSheet.create({
   placeholder: {
     width: '80%',
     alignItems: 'center',
+    backgroundColor: 'lightgrey',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10
+  },
+  request: {
+    width: '80%',
+    alignItems: 'center',
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
@@ -128,6 +196,11 @@ const styles = StyleSheet.create({
     fontSize: 30, 
     alignSelf: 'left', 
     margin: 20
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   findFriendsBtn: {
     width: '80%',
