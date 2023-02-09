@@ -31,7 +31,7 @@ def create_request():
         return jsonify({'error': 'No account found'}), 404
     else:
         data = request.json
-        newRequest = FriendRequest(data['recipient'], user.id, False)
+        newRequest = FriendRequest(user.username, data['recipient'], user.id, False)
         db.session.add(newRequest)
         db.session.commit()
         return jsonify(newRequest.toJSON()), 201

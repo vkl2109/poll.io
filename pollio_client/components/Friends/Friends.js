@@ -52,7 +52,11 @@ export default function Friends ({ navigation }) {
                 </TouchableOpacity>
                 <Text style={styles.listTitle}>Your Friends:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
-                <>{yourFriends.length == 0 ? <Text style={styles.nopolls}>No Friends Yet!</Text> :
+                <>{yourFriends.length == 0 ? 
+                <View style={styles.placeholder}>
+                    <Text style={styles.nopolls}>No Friends Yet!</Text>
+                </View> 
+                :
                 (yourFriends.map(friend => {
                     return(
                         <Text>
@@ -64,7 +68,11 @@ export default function Friends ({ navigation }) {
                 </>}
                 <Text style={styles.listTitle}>Sent Requests:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
-                <>{yourRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Sent!</Text> :
+                <>{yourRequests.length == 0 ? 
+                <View style={styles.placeholder}>
+                    <Text style={styles.nopolls}>No Requests Sent!</Text>
+                </View>
+                :
                 (yourRequests.map(request => {
                     return(
                         <Text>
@@ -76,11 +84,15 @@ export default function Friends ({ navigation }) {
                 </>}
                 <Text style={styles.listTitle}>Pending Requests:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
-                <>{receivedRequests.length == 0 ? <Text style={styles.nopolls}>No Requests Received!</Text> :
+                <>{receivedRequests.length == 0 ? 
+                <View style={styles.placeholder}>
+                    <Text style={styles.nopolls}>No Requests Received!</Text> 
+                </View>
+                :
                 (receivedRequests.map(received => {
                     return(
                         <Text>
-                            {received.recipient}
+                            {received.sender} sent a friend request
                         </Text>
                     )
                 })
@@ -102,6 +114,14 @@ const styles = StyleSheet.create({
   nopolls: {
     fontSize: 25,
     margin: 10,
+  },
+  placeholder: {
+    width: '80%',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10
   },
   listTitle: {
     fontWeight: 'bold', 

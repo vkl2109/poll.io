@@ -114,6 +114,7 @@ class Response(db.Model):
 class FriendRequest(db.Model):
     # __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
+    sender = db.Column(db.String(80), nullable=False)
     recipient = db.Column(db.String(80), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     accepted = db.Column(db.Boolean(), nullable=False)
@@ -122,9 +123,10 @@ class FriendRequest(db.Model):
         db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
     def toJSON(self):
-        return {"id": self.id, "recipient": self.recipient, "user_id": self.user_id, "accepted": self.accepted}
+        return {"id": self.id, "sender": self.sender, "recipient": self.recipient, "user_id": self.user_id, "accepted": self.accepted}
 
-    def __init__(self, recipient, user_id, accepted=False):
+    def __init__(self, sender, recipient, user_id, accepted=False):
+        self.sender = sender
         self.recipient = recipient
         self.user_id = user_id
         self.accepted = accepted
