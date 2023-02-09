@@ -168,7 +168,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
                     rounded
                     title={username[0]}
                     containerStyle={{ margin: 10, display: 'flex'}}
-                    titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
+                    titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 10, textAlign: 'center' }}
                     />}
                 <Text style={{color: usernameColor}}>{username} asks...</Text>
                 {canDelete && 

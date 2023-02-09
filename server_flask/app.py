@@ -42,6 +42,33 @@ def create_friend():
         user.befriend(friend)
         db.session.commit()
         return jsonify({'success':'friend created'}), 201
+    
+
+@app.post('/unfriend')
+@jwt_required()
+def unfriend():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        return jsonify({'error': 'No account found'}), 404
+    else:
+        data = request.json
+        find_request = FriendRequest.query.filter_by(
+            sender=data['friend'], recipient=user.username).first()
+        if not find_request:
+            other_request = FriendRequest.query.filter_by(
+                sender=user.username, recipient=data['friend']).first()
+            if not other_request:
+                return jsonify({'error': 'No friend request found'}), 404
+            find_request = other_request
+        db.session.delete(find_request)
+        db.session.commit()
+        friend = User.query.filter_by(username=data['friend']).first()
+        if not friend:
+            return jsonify({'error': 'No friend found'}), 404
+        user.unfriend(friend)
+        db.session.commit()
+        return jsonify({'success': 'unfriended'}), 201
 
 @app.delete('/deleterequest/<int:id>')
 def delete_request(id):

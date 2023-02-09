@@ -17,6 +17,8 @@ export default function Friends ({ navigation }) {
     const [ currentSentRequest, setCurrentSentRequest ] = useState({})
     const [ acceptView, setAcceptView ] = useState(false)
     const [ currentPendingRequest, setCurrentPendingRequest ] = useState({})
+    const [ unfriendView, setUnfriendView ] = useState(false)
+    const [ currentFriend, setCurrentFriend ] = useState({})
 
     const handleDeleteRequest = async (r) => {
         let req = await fetch(`http://10.129.2.90:5000/deleterequest/${r.id}`, {
@@ -26,6 +28,7 @@ export default function Friends ({ navigation }) {
             setVisibleRequest(false)
             getYourFriends()
             alert('Request deleted')
+            setCurrentSentRequest({})
         }
         else {
             let res = await req.json()
@@ -33,7 +36,30 @@ export default function Friends ({ navigation }) {
         }
     }
 
-    const handleAcceptRequest = async (r) => {
+    const handleUnfriend = async () => {
+        let req = await fetch('http://10.129.2.90:5000/unfriend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            },
+            body: JSON.stringify({
+                friend: currentFriend
+            })
+        })
+        if (req.ok) {
+            setUnfriendView(false)
+            getYourFriends()
+            alert(`Unfriended ${currentFriend}`)
+            setCurrentFriend({})
+        }
+        else {
+            let res = await req.json()
+            console.log(res.error)
+        }
+    }
+
+    const handleAcceptRequest = async () => {
         let req = await fetch('http://10.129.2.90:5000/createfriend', {
             method: 'POST',
             headers: {
@@ -48,6 +74,7 @@ export default function Friends ({ navigation }) {
             setAcceptView(false)
             getYourFriends()
             alert('Request accepted')
+            setCurrentPendingRequest({})
         }
         else {
             let res = await req.json()
@@ -79,9 +106,14 @@ export default function Friends ({ navigation }) {
         setVisibleRequest(true)
     }
 
-     const toggleAcceptView = (r) => {
+    const toggleAcceptView = (r) => {
         setCurrentPendingRequest(currentPendingRequest => r)
         setAcceptView(true)
+    }
+
+    const toggleUnfriend = (friend) => {
+        setCurrentFriend(currentFriend => friend)
+        setUnfriendView(true)
     }
 
     useEffect(()=>{
@@ -100,6 +132,45 @@ export default function Friends ({ navigation }) {
             refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={getYourFriends} />
                 }>
+                <Dialog isVisible={unfriendView}
+                    onBackdropPress={() => setUnfriendView(false)}
+                    >
+                        <Dialog.Title title={`Unfriend ${currentFriend}?`}/>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                title={"Yes"}
+                                buttonStyle={{
+                                    backgroundColor: 'green',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => handleUnfriend(currentFriend)}
+                                />
+                            <Button
+                                title={"No"}
+                                buttonStyle={{
+                                    backgroundColor: 'red',
+                                    borderWidth: 0,
+                                    borderColor: 'white',
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 100,
+                                    marginHorizontal: 5,
+                                    marginVertical: 10,
+                                }}
+                                titleStyle={{ fontWeight: 'bold' }}
+                                onPress={() => setUnfriendView(false)}
+                                />
+                        </View>
+                </Dialog>
                 <Dialog isVisible={visibleRequest}
                     onBackdropPress={() => setVisibleRequest(false)}
                     >
@@ -188,11 +259,15 @@ export default function Friends ({ navigation }) {
                     <Text style={styles.nopolls}>No Friends Yet!</Text>
                 </View> 
                 :
-                (yourFriends.map(friend => {
+                (yourFriends.map((friend, i) => {
                     return(
-                        <Text>
-                            {friend.username}
-                        </Text>
+                        <TouchableOpacity key={i} onPress={() => toggleUnfriend(friend.username)} style={{borderRadius: 10, width: '80%'}}>
+                            <View style={styles.request}>
+                                <Text style={{fontSize: 20, margin: 10}}>
+                                    {friend.username}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
                     )
                 })
                 )}
