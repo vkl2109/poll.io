@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, ScrollView, Text, View, Dimensions, Refr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Button, Dialog, Icon } from '@rneui/themed';
+import FindFriendUser from './FindFriendUser'
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 
 
@@ -13,18 +14,18 @@ export default function FindFriends ({ navigation }) {
 
     const getAllUsers = async () => {
         setRefreshing(true)
-        // let req = await fetch('http://10.129.2.90:5000/allfriends', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
-        //     }
-        // })
-        // if (req.ok) {
-        //     let res = await req.json()
-        //     setAllUsers(res)
-        //     setIsLoading(false)
-        // }
+        let req = await fetch('http://10.129.2.90:5000/allfriends', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
+        if (req.ok) {
+            let res = await req.json()
+            setAllUsers(res)
+            setIsLoading(false)
+        }
         setRefreshing(false)
     }
 
@@ -67,11 +68,9 @@ export default function FindFriends ({ navigation }) {
                 <Text style={styles.listTitle}>Find Friends:</Text>
                 {isLoading ? <ActivityIndicator size="large" /> : 
                 <>{allUsers.length == 0 ? <Text style={styles.nopolls}>No Users!</Text> :
-                (allUsers.map(user => {
+                (allUsers.map((user, i) => {
                     return(
-                        <View>
-                            {user.username}
-                        </View>
+                        <FindFriendUser key={i} user={user} index={i} />
                     )
                 })
                 )}

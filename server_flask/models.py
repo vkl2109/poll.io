@@ -28,6 +28,9 @@ class User(db.Model):
         secondaryjoin=(friendships.c.friend_id == id),
         backref=db.backref('friendships', lazy='dynamic'), lazy='dynamic')
 
+    def all_requests(self):
+        return [request.recipient for request in self.friendrequests]
+    
     def befriend(self, friend):
         if friend not in self.friends:
             self.friends.append(friend)
@@ -60,9 +63,6 @@ class Poll(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
     responses = db.relationship('Response', backref='poll', cascade='all, delete-orphan', lazy=True)
-
-    def requests_sent(self):
-        return [response.recipient for response in self.responses]
 
     def toJSON(self):
         return {"id": self.id, "question": self.question, "option1": self.option1, "option2": self.option2, "user_id": self.user_id, "created_at": self.created_at.isoformat()}

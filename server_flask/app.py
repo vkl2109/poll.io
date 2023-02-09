@@ -34,7 +34,7 @@ def get_friends():
 
 @app.post('/allfriends')
 @jwt_required()
-def get_friends():
+def all_friends():
     current_user = get_jwt_identity()
     user = User.query.get(int(current_user))
     if not user:
@@ -43,7 +43,7 @@ def get_friends():
         allusers = User.query.all()
         serializedusers = []
         for friend in allusers:
-            if friend.username in user.requests_sent():
+            if friend.username in user.all_requests():
                 newFriend = friend.toJSON()
                 newFriend['requested'] = 1
                 serializedusers.append(newFriend)
