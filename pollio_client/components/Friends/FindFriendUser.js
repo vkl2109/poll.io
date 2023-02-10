@@ -155,7 +155,7 @@ export default function FindFriendUser ({ index, user }) {
                         containerStyle={{ margin: 10, display: 'flex'}}
                         titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
                         />}
-                    <Text style={{fontWeight: 'bold', fontSize: '15', color: usernameColor}}>{username}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: '20', color: usernameColor}}>{username}</Text>
                 </View>
             </TouchableOpacity>
         </Animated.View>

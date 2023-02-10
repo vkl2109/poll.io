@@ -6,6 +6,7 @@ import { Button, Avatar, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import SentRequest from './SentRequest'
 import PendingRequest from './PendingRequest'
+import YourFriend from './YourFriend'
 const screenWidth = Dimensions.get('window').width; 
 
 export default function Friends ({ navigation }) {
@@ -263,11 +264,7 @@ export default function Friends ({ navigation }) {
                 (yourFriends.map((friend, i) => {
                     return(
                         <TouchableOpacity key={i} onPress={() => toggleUnfriend(friend.username)} style={{borderRadius: 10, width: '80%'}}>
-                            <View style={styles.request}>
-                                <Text style={{fontSize: 20, margin: 10}}>
-                                    {friend.username}
-                                </Text>
-                            </View>
+                            <YourFriend index={i} user={friend} />
                         </TouchableOpacity>
                     )
                 })
