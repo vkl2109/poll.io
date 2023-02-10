@@ -7,8 +7,10 @@ from models import db, User, Poll, Response, FriendRequest
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_socketio import SocketIO, send, emit
 from datetime import datetime
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__, static_folder='public')
+flask_bcrypt = Bcrypt(app)
 CORS(app, origins=['*'])
 app.config.from_object(Config)
 jwt = JWTManager(app)
@@ -148,7 +150,8 @@ def patch_user():
             user.username = data['username']
             print(data['username'])
         elif 'password' in data:
-            user.password = data['password']
+            pw_hash = flask_bcrypt.generate_password_hash(data['password']).decode('utf-8')
+            user.password = pw_hash
             print(data['password'])
         db.session.commit()
         return jsonify(user.toJSON()), 202
@@ -163,7 +166,7 @@ def login():
         return jsonify({'error': 'No account found'}), 404
     else:
         given_password = data['password']
-        if user.password == given_password:
+        if flask_bcrypt.check_password_hash(user.password, given_password):
             access_token = create_access_token(identity=user.id)
             # print(access_token)
             return jsonify({'user': user.toJSON(), 'token': access_token}), 200
@@ -185,7 +188,9 @@ def auto_login():
 @app.post('/signup')
 def create_user():
     data = request.json
-    user = User(data['username'], data['password'], data['avatarBase64'])
+    pw_hash = flask_bcrypt.generate_password_hash(
+        data['password']).decode('utf-8')
+    user = User(data['username'], pw_hash, data['avatarBase64'])
     db.session.add(user)
     db.session.commit()
     return jsonify(user.toJSON()), 201
@@ -209,7 +214,7 @@ def your_friend_polls():
     polls = Poll.query.all()
     polls = polls[::-1]
     if len(polls) == 0:
-        return {}, 404
+        return jsonify([]), 200
     newPolls = []
     for poll in polls:
         if poll.user_id in [friend.id for friend in user.friends] or poll.user_id == user.id:

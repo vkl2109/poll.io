@@ -59,11 +59,11 @@ export default function CreatePoll ({ navigation }) {
             setErrorDialog(true)
             setErrorMsg('Invalid Question!')
         }
-        else if (option1.length > 10|| option1.length == 0) {
+        else if (option1.length > 15|| option1.length == 0) {
             setErrorDialog(true)
             setErrorMsg('Invalid Option 1!')
         }
-        else if (option2.length > 10 || option2.length == 0) {
+        else if (option2.length > 15 || option2.length == 0) {
             setErrorDialog(true)
             setErrorMsg('Invalid Option 2!')
         }

@@ -39,9 +39,9 @@ export default function YourFriend ({ index, user }) {
                 <Avatar
                     size={50}
                     rounded
-                    title={username[0]}
+                    title={user.username[0]}
                     containerStyle={{ margin: 10, display: 'flex'}}
-                    titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 5, textAlign: 'center' }}
+                    titleStyle={{ height: 50, width: 50, backgroundColor: avatarColor, paddingTop: 8, textAlign: 'center' }}
                     />}
                 <Text style={{fontWeight: 'bold', fontSize: '20', color: 'red'}}>{user.username}</Text>
             </View>
