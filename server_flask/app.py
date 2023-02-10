@@ -115,11 +115,16 @@ def all_friends():
     else:
         allusers = User.query.all()
         serializedusers = []
+        receivedRequests = FriendRequest.query.filter_by(recipient=user.username)
         for friend in allusers:
             if friend.username not in [friend.username for friend in user.friends]:
                 if friend.username in user.all_requests():
                     newFriend = friend.toJSON()
                     newFriend['requested'] = 1
+                    serializedusers.append(newFriend)
+                elif friend.username in [received.sender for received in receivedRequests]:
+                    newFriend = friend.toJSON()
+                    newFriend['requested'] = 2
                     serializedusers.append(newFriend)
                 else:
                     newFriend = friend.toJSON()
@@ -365,8 +370,6 @@ def delete_poll(id):
         return jsonify({"success" : "poll deleted"}), 202
     else:
         return jsonify({'error': 'No account found'}), 404
-    
-    return jsonify(newPoll.toJSON()), 201
 
 @socketio.on('connect')
 @jwt_required()

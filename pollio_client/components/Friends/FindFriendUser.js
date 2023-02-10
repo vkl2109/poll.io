@@ -11,6 +11,7 @@ export default function FindFriendUser ({ index, user }) {
     const [ selfError, setSelfError ] = useState(false)
     const [ visibleRequest, setVisibleRequest ] = useState(false)
     const [ alreadySent, setAlreadySent ] = useState(false)
+    const [ alreadyReceived, setAlreadyReceived ] = useState(false)
 
     let avatarBase64 = user['avatarBase64']
     let username = user['username']
@@ -43,6 +44,9 @@ export default function FindFriendUser ({ index, user }) {
         else if (sentColor == 'lightgrey'){
             setAlreadySent(true)
         }
+        else if (sentColor == 'grey'){
+            setAlreadyReceived(true)
+        }
     }
 
     const handleFriendRequest = async () => {
@@ -72,11 +76,15 @@ export default function FindFriendUser ({ index, user }) {
         if (user['requested'] == 1) {
             setSentColor('lightgrey')
         }
+        else if (user['requested'] == 2) {
+            setSentColor('grey')
+        }
+        console.log(user['requested'])
     },[])
     
     return (
         <Animated.View style={{...styles.pollCard, transform: [{ translateY: slideUp }],}}>
-            <TouchableOpacity onPress={handleRequest} style={{backgroundColor: sentColor, borderRadius: 10}}>
+            <TouchableOpacity onPress={handleRequest} style={{backgroundColor: sentColor, borderRadius: 8}}>
                 <Dialog isVisible={selfError}
                     onBackdropPress={() => setSelfError(false)}
                     >
@@ -86,6 +94,11 @@ export default function FindFriendUser ({ index, user }) {
                     onBackdropPress={() => setAlreadySent(false)}
                     >
                         <Dialog.Title title={"Already Sent Request"}/>
+                </Dialog>
+                <Dialog isVisible={alreadyReceived}
+                    onBackdropPress={() => setAlreadyReceived(false)}
+                    >
+                        <Dialog.Title title={"Already Received Request"}/>
                 </Dialog>
                 <Dialog isVisible={visibleRequest}
                     onBackdropPress={() => setVisibleRequest(false)}
