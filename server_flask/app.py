@@ -175,9 +175,7 @@ def login():
 @jwt_required()
 def auto_login():
     current_user = get_jwt_identity()
-
     user = User.query.get(int(current_user))
-
     if not user:
         return jsonify({'error': 'No account found'}), 404
     else:
@@ -200,6 +198,24 @@ def all_polls():
         return jsonify([poll.to_dict() for poll in polls]), 200
     else:
         return {}, 404
+    
+@app.post('/yourfriendpolls')
+@jwt_required()
+def your_friend_polls():
+    current_user = get_jwt_identity()
+    user = User.query.get(int(current_user))
+    if not user:
+        return jsonify({'error': 'No account found'}), 404
+    polls = Poll.query.all()
+    polls = polls[::-1]
+    if len(polls) == 0:
+        return {}, 404
+    newPolls = []
+    for poll in polls:
+        if poll.user_id in [friend.id for friend in user.friends] or poll.user_id == user.id:
+            newPolls.append(poll)
+    return jsonify([poll.to_dict() for poll in newPolls]), 200
+        
 
 @app.post('/checkpoll/<int:id>')
 @jwt_required()

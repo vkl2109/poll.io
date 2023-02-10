@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, Animated, RefreshControl, StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as SecureStore from 'expo-secure-store';
 import Poll from '../Poll'
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -11,7 +12,13 @@ export default function Feed ({ navigation }) {
 
     const getAllPolls = async () => {
             setRefreshing(true)
-            let req = await fetch('http://10.129.2.90:5000/polls')
+            let req = await fetch('http://10.129.2.90:5000/yourfriendpolls', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await SecureStore.getItemAsync('token')}`
+            }
+        })
             if (req.ok) {
                 let res = await req.json()
                 setAllPolls(res)
@@ -45,6 +52,7 @@ export default function Feed ({ navigation }) {
                     <RefreshControl refreshing={refreshing} onRefresh={getAllPolls} />
                 }>
                 {isLoading ? <ActivityIndicator size="large" /> :
+                <>{allPolls.length == 0 ? <Text style={styles.nopolls}>No Polls Yet!</Text> :
                 (allPolls.map((examplePoll, i) => {
                     return(
                         <TouchableOpacity key={examplePoll.poll.id} onPress={()=>handleViewPoll(examplePoll)} style={styles.wrapper}>
@@ -52,6 +60,7 @@ export default function Feed ({ navigation }) {
                         </TouchableOpacity>
                     )}   
                 ))}
+                </>}
             </ScrollView>
         </SafeAreaView>
     )
@@ -68,5 +77,9 @@ const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
     alignItems: 'center',
-  }
+  },
+  nopolls: {
+    fontSize: 25,
+    margin: 10,
+  },
 });
