@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Button, Avatar, Dialog } from '@rneui/themed';
-import * as SecureStore from 'expo-secure-store';
-import { useSelector } from "react-redux"
+import React, { useEffect, useRef } from 'react'
+import { Animated, StyleSheet, View, Text } from 'react-native';
 
-export default function SentRequest ({ index, request }) {
+export default function PendingRequest ({ index, request }) {
 
     const slideUp = useRef(new Animated.Value(1000)).current;
 
@@ -24,7 +21,7 @@ export default function SentRequest ({ index, request }) {
     return (
         <Animated.View style={{...styles.pollCard, transform: [{ translateY: slideUp }],}}>
             <View style={styles.header}>
-                <Text style={{fontWeight: 'bold', fontSize: '20', color: 'red', margin: 20}}>{request.recipient}</Text>
+                <Text style={{fontWeight: 'bold', fontSize: '20', color: 'green', margin: 20}}>{request.sender}</Text>
             </View>
         </Animated.View>
     )

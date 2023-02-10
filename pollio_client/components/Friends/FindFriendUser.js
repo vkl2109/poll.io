@@ -41,10 +41,10 @@ export default function FindFriendUser ({ index, user }) {
         else if (sentColor == 'white') {
             setVisibleRequest(true)
         }
-        else if (sentColor == 'lightgrey'){
+        else if (sentColor == '#e0e0e0'){
             setAlreadySent(true)
         }
-        else if (sentColor == 'grey'){
+        else if (sentColor == '#d3d3d3'){
             setAlreadyReceived(true)
         }
     }
@@ -63,7 +63,7 @@ export default function FindFriendUser ({ index, user }) {
         if (req.ok) {
             setVisibleRequest(false)
             alert('Friend Request Sent!')
-            setSentColor('lightgrey')
+            setSentColor('#e0e0e0')
         }
     }
 
@@ -74,10 +74,10 @@ export default function FindFriendUser ({ index, user }) {
             setUsernameColor('#228b22')
         }
         if (user['requested'] == 1) {
-            setSentColor('lightgrey')
+            setSentColor('#e0e0e0')
         }
         else if (user['requested'] == 2) {
-            setSentColor('grey')
+            setSentColor('#d3d3d3')
         }
         console.log(user['requested'])
     },[])

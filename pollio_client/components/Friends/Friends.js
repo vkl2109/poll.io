@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Button, Avatar, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import SentRequest from './SentRequest'
+import PendingRequest from './PendingRequest'
 const screenWidth = Dimensions.get('window').width; 
 
 export default function Friends ({ navigation }) {
@@ -174,7 +175,7 @@ export default function Friends ({ navigation }) {
                 <Dialog isVisible={visibleRequest}
                     onBackdropPress={() => setVisibleRequest(false)}
                     >
-                        <Dialog.Title title={`Remove ${currentSentRequest.recipient} friend request?`}/>
+                        <Dialog.Title title={`Remove ${currentSentRequest.recipient}'s request?`}/>
                         <View style={styles.buttonContainer}>
                             <Button
                                 title={"Yes"}
@@ -213,7 +214,7 @@ export default function Friends ({ navigation }) {
                 <Dialog isVisible={acceptView}
                     onBackdropPress={() => setAcceptView(false)}
                     >
-                        <Dialog.Title title={`Accept ${currentPendingRequest.sender} friend request?`}/>
+                        <Dialog.Title title={`Accept ${currentPendingRequest.sender}'s request?`}/>
                         <View style={styles.buttonContainer}>
                             <Button
                                 title={"Yes"}
@@ -282,11 +283,7 @@ export default function Friends ({ navigation }) {
                 (receivedRequests.map((r, i) => {
                     return(
                         <TouchableOpacity key={i} onPress={() => toggleAcceptView(r)} style={{borderRadius: 10, width: '80%'}}>
-                            <View style={styles.request}>
-                                <Text style={{fontSize: 20, margin: 10}}>
-                                    {r.sender} sent a friend request
-                                </Text>
-                            </View>
+                            <PendingRequest index={i} request={r} />
                         </TouchableOpacity>
                     )
                 })
