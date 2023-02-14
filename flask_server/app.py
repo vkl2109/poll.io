@@ -211,14 +211,13 @@ def your_friend_polls():
     user = User.query.get(int(current_user))
     if not user:
         return jsonify({'error': 'No account found'}), 404
-    polls = Poll.query.all()
-    polls = polls[::-1]
-    if len(polls) == 0:
-        return jsonify([]), 200
     newPolls = []
-    for poll in polls:
-        if poll.user_id in [friend.id for friend in user.friends] or poll.user_id == user.id:
+    for friend in user.friends:
+        for poll in friend.polls:
             newPolls.append(poll)
+    for selfPoll in user.polls:
+        newPolls.append(selfPoll)
+    newPolls.sort(reverse=True, key=lambda x: x.created_at)
     return jsonify([poll.to_dict() for poll in newPolls]), 200
         
 
