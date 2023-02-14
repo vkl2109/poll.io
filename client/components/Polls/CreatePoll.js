@@ -75,6 +75,7 @@ export default function CreatePoll ({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
+                <KeyboardAwareScrollView contentContainerStyle={styles.container}>
             <View style={{alignSelf: 'left'}}>
                 <Button
                     buttonStyle={{
@@ -106,7 +107,6 @@ export default function CreatePoll ({ navigation }) {
                     <Dialog.Title style={styles.dialogTitle} title={"Error"} />
                     <Text style={styles.dialogText}>{errorMsg}</Text>
                 </Dialog>
-                <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                     <Text>What's your question?</Text>
                     <TextInput
                         mode="outlined"
@@ -148,8 +148,8 @@ export default function CreatePoll ({ navigation }) {
                         titleStyle={{ fontWeight: 'bold' }}
                         onPress={() => handleCreatePoll()}
                         />
-                </KeyboardAwareScrollView>
             </ScrollView>
+                </KeyboardAwareScrollView>
         </SafeAreaView>
     )
 }

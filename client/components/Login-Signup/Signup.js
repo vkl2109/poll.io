@@ -437,7 +437,7 @@ export default function Signup ({ navigation }) {
                             <Dialog.Title style={styles.dialogTitle} title={"Choose Avatar?"} />
                             <View style={styles.buttonContainer}>
                                 <Button
-                                    title={"Library"}
+                                    title={""}
                                     buttonStyle={{
                                         backgroundColor: '#369F8E',
                                         borderWidth: 0,
@@ -445,12 +445,13 @@ export default function Signup ({ navigation }) {
                                         borderRadius: 30,
                                     }}
                                     containerStyle={{
-                                        width: 100,
-                                        marginHorizontal: 5,
+                                        width: 60,
+                                        marginHorizontal: 10,
                                         marginVertical: 10,
                                     }}
                                     titleStyle={{ fontWeight: 'bold' }}
                                     onPress={() => pickImage()}
+                                    icon={<Icon name="photo" size={30} color="white" />}
                                     />
                                 <Button
                                     title={"X"}
@@ -470,7 +471,7 @@ export default function Signup ({ navigation }) {
                                     onPress={() => toggleDeleteView()}
                                     />
                                 <Button
-                                    title={"Camera"}
+                                    title={""}
                                     buttonStyle={{
                                         backgroundColor: '#369F8E',
                                         borderWidth: 0,
@@ -478,12 +479,13 @@ export default function Signup ({ navigation }) {
                                         borderRadius: 30,
                                     }}
                                     containerStyle={{
-                                        width: 100,
-                                        marginHorizontal: 5,
+                                        width: 60,
+                                        marginHorizontal: 10,
                                         marginVertical: 10,
                                     }}
                                     titleStyle={{ fontWeight: 'bold' }}
                                     onPress={() => handleCamera()}
+                                    icon={<Icon name="camera-alt" size={30} color="white" />}
                                     />
                             </View>
                         </Dialog>

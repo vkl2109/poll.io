@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, RefreshControl, StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Avatar, Dialog } from '@rneui/themed';
+import { Button, Avatar, Dialog, Icon } from '@rneui/themed';
 import { TextInput } from 'react-native-paper';
 const screenWidth = Dimensions.get('window').width; 
 import * as SecureStore from 'expo-secure-store';
@@ -245,7 +245,7 @@ export default function Profile ({ navigation }) {
                         <Dialog.Title style={styles.dialogTitle} title={"Replace Avatar?"} />
                         <View style={styles.buttonContainer}>
                             <Button
-                                title={"Library"}
+                                title={""}
                                 buttonStyle={{
                                     backgroundColor: '#369F8E',
                                     borderWidth: 0,
@@ -253,12 +253,13 @@ export default function Profile ({ navigation }) {
                                     borderRadius: 30,
                                 }}
                                 containerStyle={{
-                                    width: 100,
-                                    marginHorizontal: 5,
+                                    width: 60,
+                                    marginHorizontal: 10,
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
                                 onPress={() => pickImage()}
+                                icon={<Icon name="photo" size={30} color="white" />}
                                 />
                             <Button
                                 title={"X"}
@@ -271,14 +272,14 @@ export default function Profile ({ navigation }) {
                                 containerStyle={{
                                     height: 40,
                                     width: 40,
-                                    marginHorizontal: 5,
+                                    marginHorizontal: 10,
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
                                 onPress={() => toggleDeleteView()}
                                 />
                             <Button
-                                title={"Camera"}
+                                title={""}
                                 buttonStyle={{
                                     backgroundColor: '#369F8E',
                                     borderWidth: 0,
@@ -286,12 +287,13 @@ export default function Profile ({ navigation }) {
                                     borderRadius: 30,
                                 }}
                                 containerStyle={{
-                                    width: 100,
-                                    marginHorizontal: 5,
+                                    width: 60,
+                                    marginHorizontal: 10,
                                     marginVertical: 10,
                                 }}
                                 titleStyle={{ fontWeight: 'bold' }}
                                 onPress={() => handleCamera()}
+                                icon={<Icon name="camera-alt" size={30} color="white" />}
                                 />
                         </View>
                     </Dialog>
