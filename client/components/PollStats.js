@@ -36,7 +36,7 @@ export default function PollStats ({ index, user, pollData }) {
     };
 
     const getPollStats = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/getpollstats/${pollData['id']}`, {
+        let req = await fetch(`${process.env.SERVER_URL}/getpollstats/${pollData['id']}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

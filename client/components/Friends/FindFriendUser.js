@@ -50,7 +50,7 @@ export default function FindFriendUser ({ index, user }) {
     }
 
     const handleFriendRequest = async () => {
-        let req = await fetch('http://10.129.2.90:5000/createrequest', {
+        let req = await fetch(`${process.env.SERVER_URL}/createrequest`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

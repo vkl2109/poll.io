@@ -3,8 +3,8 @@ module.exports = function(api) {
   return {
     presets: ['babel-preset-expo'],
     env: {
-      production: {
-        plugins: ['react-native-paper/babel'],
+      development: {
+        plugins: ['inline-dotenv', 'react-native-paper/babel'],
       },
     },
   };

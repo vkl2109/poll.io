@@ -30,7 +30,7 @@ export default function Profile ({ navigation }) {
     const getProfile = async () => {
         setLoading(true)
         setRefreshing(true)
-        let req = await fetch(`http://10.129.2.90:5000/autologin`, {
+        let req = await fetch(`${process.env.SERVER_URL}/autologin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function Profile ({ navigation }) {
     }
 
     const updateUser = async (base64) => {
-        let req = await fetch('http://10.129.2.90:5000/profile', {
+        let req = await fetch(`${process.env.SERVER_URL}/profile`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export default function Profile ({ navigation }) {
             setErrorDialog(true)
             return
         }
-        let req = await fetch('http://10.129.2.90:5000/profile', {
+        let req = await fetch(`${process.env.SERVER_URL}/profile`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ export default function Profile ({ navigation }) {
             setErrorDialog(true)
             return
         }
-        let req = await fetch('http://10.129.2.90:5000/profile', {
+        let req = await fetch(`${process.env.SERVER_URL}/profile`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

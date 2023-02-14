@@ -108,7 +108,7 @@ export default function Signup ({ navigation }) {
     // );
 
     const login = async () => {
-        let req = await fetch("http://10.129.2.90:5000/login", {
+        let req = await fetch(`${process.env.SERVER_URL}/login`, {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -131,7 +131,7 @@ export default function Signup ({ navigation }) {
 
     const handleSignUp = () => {
         const signup = async () => {
-            let req = await fetch("http://10.129.2.90:5000/signup", {
+            let req = await fetch(`${process.env.SERVER_URL}/signup`, {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({

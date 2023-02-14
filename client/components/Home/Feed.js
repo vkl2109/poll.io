@@ -12,7 +12,7 @@ export default function Feed ({ navigation }) {
 
     const getAllPolls = async () => {
             setRefreshing(true)
-            let req = await fetch('http://10.129.2.90:5000/yourfriendpolls', {
+            let req = await fetch(`${process.env.SERVER_URL}/yourfriendpolls`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

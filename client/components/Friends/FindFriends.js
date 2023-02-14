@@ -14,7 +14,7 @@ export default function FindFriends ({ navigation }) {
 
     const getAllUsers = async () => {
         setRefreshing(true)
-        let req = await fetch('http://10.129.2.90:5000/allfriends', {
+        let req = await fetch(`${process.env.SERVER_URL}/allfriends`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

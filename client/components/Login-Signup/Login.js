@@ -18,7 +18,7 @@ export default function Login ({ navigation }) {
 
     const handleLogin = () => {
         const login = async () => {
-            let req = await fetch("http://10.129.2.90:5000/login", {
+            let req = await fetch(`${process.env.SERVER_URL}/login`, {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -48,6 +48,10 @@ export default function Login ({ navigation }) {
         setErrorDialog(false)
         setErrorMsg('')
     }
+
+    useEffect(()=>{
+        console.log(process.env.SERVER_URL)
+    },[])
 
     return (
         <SafeAreaView style={styles.container}>

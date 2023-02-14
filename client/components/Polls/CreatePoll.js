@@ -30,7 +30,7 @@ export default function CreatePoll ({ navigation }) {
                 newQuestion = newQuestion.slice() + "?"
             }
         }
-        let req = await fetch('http://10.129.2.90:5000/createpoll', {
+        let req = await fetch(`${process.env.SERVER_URL}/createpoll`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

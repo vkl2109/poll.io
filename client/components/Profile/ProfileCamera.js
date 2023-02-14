@@ -18,7 +18,7 @@ export default function ProfileCamera({ navigation }) {
     const imageRef = useRef();
 
     const sendImage = async (base64) => {
-        let req = await fetch('http://10.129.2.90:5000/profile', {
+        let req = await fetch(`${process.env.SERVER_URL}/profile`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',

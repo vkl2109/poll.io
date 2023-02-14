@@ -17,7 +17,7 @@ export default function YourPolls ({ navigation }) {
 
     const getYourPolls = async () => {
         setRefreshing(true)
-        let req = await fetch('http://10.129.2.90:5000/yourpolls', {
+        let req = await fetch(`${process.env.SERVER_URL}/yourpolls`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

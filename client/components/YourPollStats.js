@@ -85,7 +85,7 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     };
 
     const handleDelete = async () => {
-        let req = await fetch(`http://10.129.2.90:5000/deletepoll/${pollData['id']}`, {
+        let req = await fetch(`${process.env.SERVER_URL}/deletepoll/${pollData['id']}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

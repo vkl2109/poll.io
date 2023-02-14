@@ -23,7 +23,7 @@ export default function Friends ({ navigation }) {
     const [ currentFriend, setCurrentFriend ] = useState({})
 
     const handleDeleteRequest = async (r) => {
-        let req = await fetch(`http://10.129.2.90:5000/deleterequest/${r.id}`, {
+        let req = await fetch(`${process.env.SERVER_URL}/deleterequest/${r.id}`, {
             method: 'DELETE'
         })
         if (req.ok) {
@@ -39,7 +39,7 @@ export default function Friends ({ navigation }) {
     }
 
     const handleUnfriend = async () => {
-        let req = await fetch('http://10.129.2.90:5000/unfriend', {
+        let req = await fetch(`${process.env.SERVER_URL}/unfriend`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default function Friends ({ navigation }) {
     }
 
     const handleAcceptRequest = async () => {
-        let req = await fetch('http://10.129.2.90:5000/createfriend', {
+        let req = await fetch(`${process.env.SERVER_URL}/createfriend`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function Friends ({ navigation }) {
 
     const getYourFriends = async () => {
         setRefreshing(true)
-        let req = await fetch('http://10.129.2.90:5000/yourfriends', {
+        let req = await fetch(`${process.env.SERVER_URL}/yourfriends`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
