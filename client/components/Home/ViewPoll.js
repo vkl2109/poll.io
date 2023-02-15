@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, ScrollView, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, View, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import YourPollStats from '../YourPollStats'
 import { Button, Icon } from '@rneui/themed';

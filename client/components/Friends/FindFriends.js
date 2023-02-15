@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Button, Dialog, Icon } from '@rneui/themed';
+import { Button, Icon } from '@rneui/themed';
 import FindFriendUser from './FindFriendUser'
 import * as SecureStore from 'expo-secure-store';
 const screenWidth = Dimensions.get('window').width; 

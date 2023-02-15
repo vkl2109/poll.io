@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, ScrollView, View, Text, Image, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native-paper';
@@ -10,10 +10,8 @@ import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import { captureRef } from 'react-native-view-shot';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 import { login as userLogin } from '../../redux/reducers/userReducer'
-import { uploadAvatar, deleteAvatar } from '../../redux/reducers/avatarReducer'
 
 const screenWidth = Dimensions.get('window').width; 
 
@@ -36,7 +34,6 @@ export default function Signup ({ navigation }) {
     const [ camera, setCamera ] = useState(null);
     const [ tempPic, setTempPic ] = useState()
     const dispatch = useDispatch();
-    const currentAvatar = useSelector((state) => state.avatar)
     const imageRef = useRef();
 
     const takePicture = async () => {
@@ -80,32 +77,11 @@ export default function Signup ({ navigation }) {
             }
         })();
         setLoading(false)
-        // if (currentAvatar != '') {
-        //     const img = "data:image/jpeg;base64," + currentAvatar
-        //     setAvatarImg(img);
-        // }
-        // else {
-        //     setAvatarImg(null)
-        // }
         if (status === null) {
             requestPermission();
         }
         setLoading(true)
     }, []);
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         setLoading(false)
-    //         if (currentAvatar != '') {
-    //             const img = "data:image/jpeg;base64," + currentAvatar
-    //             setAvatarImg(img);
-    //         }
-    //         else {
-    //             setAvatarImg(null)
-    //         }
-    //         setLoading(true)
-    //     }, [])
-    // );
 
     const login = async () => {
         let req = await fetch(`${process.env.SERVER_URL}/login`, {
@@ -160,7 +136,7 @@ export default function Signup ({ navigation }) {
             setErrorDialog(true)
             setErrorMsg(`passwords don't match`)
         }
-        // navigation.navigate('Main') // temporary
+        // navigation.navigate('Main')
     }
 
     const handleCamera = () => {
@@ -521,176 +497,6 @@ export default function Signup ({ navigation }) {
                             secureTextEntry={hide2}
                             right={<TextInput.Icon icon="eye" onPress={() => setHide2(hide2 => !hide2)} style={{ justifyContent: 'center'}}/>}
                             />
-                        {/* {chooseAvatar && 
-                        <>
-                            {avatar ? 
-                            <View style={styles.avatarContainer}>
-                                <View style={styles.buttonContainer}> 
-                                    {library ? 
-                                    <Button
-                                        title={""}
-                                        buttonStyle={{
-                                            backgroundColor: '#FFA500',
-                                            borderColor: 'transparent',
-                                            borderWidth: 0,
-                                            borderRadius: 30,
-                                            paddingTop: 6,
-                                            height: 40,
-                                            width: 40
-                                        }}
-                                        containerStyle={{
-                                            width: 40,
-                                            height: 40,
-                                            marginHorizontal: 30,
-                                            marginVertical: 10,
-                                        }}
-                                        titleStyle={{ fontWeight: 'bold' }}
-                                        onPress={() => pickImage()}
-                                        icon={<Icon name="photo" size={20} color="white" />}
-                                        />
-                                    :
-                                    <Button
-                                        title={""}
-                                        buttonStyle={{
-                                            backgroundColor: '#FFA500',
-                                            borderColor: 'transparent',
-                                            borderWidth: 0,
-                                            borderRadius: 30,
-                                            paddingTop: 6,
-                                            height: 40,
-                                            width: 40
-                                        }}
-                                        containerStyle={{
-                                            width: 40,
-                                            height: 40,
-                                            marginHorizontal: 30,
-                                            marginVertical: 10,
-                                        }}
-                                        titleStyle={{ fontWeight: 'bold' }}
-                                        onPress={() => setAvatar()}
-                                        icon={<Icon name="camera-alt" size={20} color="white" />}
-                                        />}
-                                    <Button
-                                        title={""}
-                                        buttonStyle={{
-                                            backgroundColor: '#FFA500',
-                                            borderColor: 'transparent',
-                                            borderWidth: 0,
-                                            borderRadius: 30,
-                                            paddingTop: 6,
-                                            height: 40,
-                                            width: 40
-                                        }}
-                                        containerStyle={{
-                                            width: 40,
-                                            height: 40,
-                                            marginHorizontal: 30,
-                                            marginVertical: 10,
-                                        }}
-                                        titleStyle={{ fontWeight: 'bold' }}
-                                        onPress={() => onSaveImageAsync()}
-                                        icon={<Icon name="save" size={20} color="white" />}
-                                        iconRight
-                                        />
-                                </View>
-                                <View ref={imageRef} collapsable={false}>
-                                    <Image source={{ uri: avatar }} style={styles.image} />
-                                </View>
-                            </View>
-                            :
-                            <View style={styles.avatarContainer}>
-                                <Button
-                                title={""}
-                                buttonStyle={{
-                                    backgroundColor: '#FFA500',
-                                    borderColor: 'transparent',
-                                    borderWidth: 0,
-                                    borderRadius: 30,
-                                    paddingTop: 6,
-                                    height: 40,
-                                    width: 40
-                                }}
-                                containerStyle={{
-                                    width: 40,
-                                    height: 40,
-                                    marginHorizontal: 50,
-                                    marginVertical: 10,
-                                }}
-                                titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => takePicture()}
-                                icon={<Icon name="camera" size={20} color="white" />}
-                                />
-                                <View style={styles.cameraContainer}>
-                                    <Camera
-                                        ref={ref => setCamera(ref)}
-                                        style={styles.fixedRatio}
-                                        type={Camera.Constants.Type.front}
-                                        ratio={'1:1'} />
-                                </View>
-                            </View>}
-                        </>}
-                        {chooseAvatar ? 
-                        <Button
-                            title={""}
-                            buttonStyle={{
-                                backgroundColor: '#FFA500',
-                                borderColor: 'transparent',
-                                borderWidth: 0,
-                                borderRadius: 30,
-                                width: 40,
-                                height: 40,
-                            }}
-                            containerStyle={{
-                                width: 40,
-                                height: 40,
-                                marginHorizontal: 50,
-                                marginVertical: 10,
-                            }}
-                            onPress={() => toggleClose()}
-                            icon={<Icon name="arrow-circle-up" size={20} color="white" />}
-                            />
-                        : <View style={styles.buttonContainer}> 
-                            <Button
-                                title={""}
-                                buttonStyle={{
-                                    backgroundColor: '#FFA500',
-                                    borderColor: 'transparent',
-                                    borderWidth: 0,
-                                    borderRadius: 30,
-                                    width: 40,
-                                    height: 40,
-                                }}
-                                containerStyle={{
-                                    width: 40,
-                                    height: 40,
-                                    marginHorizontal: 20,
-                                    marginVertical: 10,
-                                }}
-                                titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => toggleCamera()}
-                                icon={<Icon name="camera-alt" size={20} color="white" />}
-                                />
-                            <Button
-                                title={""}
-                                buttonStyle={{
-                                    backgroundColor: '#FFA500',
-                                    borderColor: 'transparent',
-                                    borderWidth: 0,
-                                    borderRadius: 30,
-                                    width: 40,
-                                    height: 40,
-                                }}
-                                containerStyle={{
-                                    width: 40,
-                                    height: 40,
-                                    marginHorizontal: 20,
-                                    marginVertical: 10,
-                                }}
-                                titleStyle={{ fontWeight: 'bold' }}
-                                onPress={() => pickImage()}
-                                icon={<Icon name="photo" size={20} color="white" />}
-                                />
-                        </View>} */}
                         <Button
                             title={"SIGN UP"}
                             buttonStyle={{
@@ -723,7 +529,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'top',
         width: screenWidth
-        // alignSelf:'stretch'
     },
     dialogContainer: {
         flex: 1,
@@ -732,7 +537,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: screenWidth
-        // alignSelf:'stretch'
     },
     containerTop: {
         flex: 1,

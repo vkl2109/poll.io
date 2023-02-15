@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef  } from 'react'
-import { StyleSheet, ScrollView, View, Text, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
-import { Button, Dialog, Icon } from '@rneui/themed';
+import { Button, Icon } from '@rneui/themed';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';

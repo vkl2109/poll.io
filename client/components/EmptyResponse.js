@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View, Text, Dimensions } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Animated, StyleSheet, Text } from 'react-native'
 
 export default function EmptyResponse () {
 

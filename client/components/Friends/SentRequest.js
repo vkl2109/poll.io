@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Button, Avatar, Dialog } from '@rneui/themed';
-import * as SecureStore from 'expo-secure-store';
-import { useSelector } from "react-redux"
+import React, { useEffect, useRef } from 'react'
+import { Animated, StyleSheet, View, Text } from 'react-native';
 
 export default function SentRequest ({ index, request }) {
 
@@ -40,16 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  question: {
-    alignSelf: 'center',
-    marginBottom: 10,
-    fontSize: 20
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   pollCard: {
     width: '100%',

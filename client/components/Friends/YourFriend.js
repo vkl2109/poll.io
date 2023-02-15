@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
-import { Button, Avatar, Dialog } from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 
 export default function YourFriend ({ index, user }) {
     const [ avatarColor, setAvatarColor ] = useState('#3d4db7')
@@ -59,16 +59,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'left'
-  },
-  question: {
-    alignSelf: 'center',
-    marginBottom: 10,
-    fontSize: 20
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   pollCard: {
     width: '100%',

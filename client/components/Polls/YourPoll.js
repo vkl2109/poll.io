@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, ScrollView, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import PollStats from '../PollStats'
 import Response from '../Response'
 

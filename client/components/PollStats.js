@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Animated, StyleSheet, View, Text } from 'react-native';
-import { Button, Avatar } from '@rneui/themed';
+import { Avatar } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import { useSelector } from "react-redux"
 

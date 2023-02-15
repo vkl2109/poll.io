@@ -15,7 +15,6 @@ export default function PollStats ({ index, user, pollData, option1T, option2T }
     let question = pollData['question']
     let option1 = pollData['option1']
     let option2 = pollData['option2']
-    let created_at = pollData['created_at']
     
     const calculateTimePosted = () => {
         const date = new Date()

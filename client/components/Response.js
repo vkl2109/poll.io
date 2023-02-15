@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View, Text, Dimensions } from 'react-native'
+import { Animated, StyleSheet, Text, Dimensions } from 'react-native'
 import { useSelector } from "react-redux"
 
 const screenWidth = Dimensions.get('window').width; 

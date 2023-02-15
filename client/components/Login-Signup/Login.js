@@ -41,7 +41,7 @@ export default function Login ({ navigation }) {
             }
         }
         login()
-        // navigation.navigate('Main') // temporary
+        // navigation.navigate('Main')
     }
 
     const toggleErrorDialog = () => {
@@ -133,8 +133,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#ADD8E6', // '#25292e'
     alignItems: 'center',
-    justifyContent: 'center',
-    // alignSelf:'stretch'
+    justifyContent: 'center'
   },
   logo: {
     width: 300,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Text, View, Dimensions, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Button, Avatar, Dialog } from '@rneui/themed';
+import { Button, Dialog } from '@rneui/themed';
 import * as SecureStore from 'expo-secure-store';
 import SentRequest from './SentRequest'
 import PendingRequest from './PendingRequest'

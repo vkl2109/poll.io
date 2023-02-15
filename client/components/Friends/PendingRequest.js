@@ -38,16 +38,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  question: {
-    alignSelf: 'center',
-    marginBottom: 10,
-    fontSize: 20
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   pollCard: {
     width: '100%',
     border: 1,
