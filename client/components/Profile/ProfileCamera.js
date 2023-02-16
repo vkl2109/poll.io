@@ -14,7 +14,9 @@ export default function ProfileCamera({ navigation }) {
     const [ camera, setCamera ] = useState(null);
     const [status, requestPermission] = MediaLibrary.usePermissions();
     const [ base64Image, setBase64Image ] = useState('')
+    const [type, setType] = useState(Camera.Constants.Type.front);
     const [ avatar, setAvatar ] = useState()
+
     const imageRef = useRef();
 
     const sendImage = async (base64) => {
@@ -104,11 +106,12 @@ export default function ProfileCamera({ navigation }) {
                 <Camera
                     ref={ref => setCamera(ref)}
                     style={styles.fixedRatio}
-                    type={Camera.Constants.Type.front}
+                    type={type}
                     ratio={'1:1'} />}
             </View>
             <View style={styles.buttonContainer}>
                 {!avatar ? 
+                <>
                 <Button
                     title={""}
                     buttonStyle={{
@@ -131,6 +134,34 @@ export default function ProfileCamera({ navigation }) {
                     onPress={() => takePicture()}
                     icon={<Icon name="camera-alt" size={50} color="white" />}
                     />
+                <Button
+                    title={""}
+                    buttonStyle={{
+                        backgroundColor: 'transparent',
+                        borderColor: 'transparent',
+                        borderWidth: 0,
+                        borderRadius: 30,
+                        paddingTop: 6,
+                        height: 100,
+                        width: 100,
+                    }}
+                    containerStyle={{
+                        width: 100,
+                        height: 100,
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                        alignSelf: 'center'
+                    }}
+                    titleStyle={{ fontWeight: 'bold' }}
+                    onPress={(() => {
+                            setType(
+                                type === Camera.Constants.Type.front
+                                    ? Camera.Constants.Type.back
+                                    : Camera.Constants.Type.front
+                            )})}
+                    icon={<Icon name="flip-camera-ios" size={50} color="white" />}
+                    />
+                </>
                 :
                 <>
                 <Button
@@ -198,7 +229,7 @@ export default function ProfileCamera({ navigation }) {
                     }}
                     titleStyle={{ fontWeight: 'bold' }}
                     onPress={() => setAvatar()}
-                    icon={<Icon name="flip-camera-ios" size={50} color="white" />}
+                    icon={<Icon name="camera-alt" size={50} color="white" />}
                     />
                 </>}
             </View>
